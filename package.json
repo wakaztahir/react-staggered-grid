@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "React Staggered Grid Component",
   "main": "lib/index.js",
-  "private": true,
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
     "@testing-library/jest-dom": "^5.12.0",
