@@ -2,7 +2,7 @@ import React from "react";
 import {StaggeredGridContext} from "./StaggeredGridContext";
 import {StaggeredGridItemProps, StaggeredGridItemState, StaggeredItemSpan} from "./StaggeredGridModel";
 
-export default class StaggeredGridItem extends React.Component<StaggeredGridItemProps & typeof StaggeredGridItem.defaultProps, StaggeredGridItemState> {
+class StaggeredGridItem extends React.Component<StaggeredGridItemProps & typeof StaggeredGridItem.defaultProps, StaggeredGridItemState> {
 
     static contextType = StaggeredGridContext
 
@@ -90,3 +90,5 @@ export default class StaggeredGridItem extends React.Component<StaggeredGridItem
         )
     }
 }
+
+export default StaggeredGridItem
