@@ -4,6 +4,11 @@ export enum StaggeredItemSpan {
     Full,
 }
 
+export enum StaggeredDisplay {
+    Linear,
+    Grid
+}
+
 export enum StaggeredAlignment {
     Start,
     Center,
@@ -11,11 +16,19 @@ export enum StaggeredAlignment {
 }
 
 export interface StaggeredGridProps<Type> {
+    display?: StaggeredDisplay,
     columnWidth?: number,
     alignment?: StaggeredAlignment
     className?: string,
     items: Array<Type>,
     render: (item: Type, index: number) => any
+}
+
+export const StaggeredGridDefaultProps = {
+    display: StaggeredDisplay.Grid,
+    alignment: StaggeredAlignment.Center,
+    columnWidth: 260,
+    className: ""
 }
 
 export interface StaggeredGridState {
@@ -24,8 +37,8 @@ export interface StaggeredGridState {
 }
 
 export interface GridItemData {
-    getItemWidth: () => number | null,
-    getItemHeight: () => number | null,
+    itemWidth: number | null,
+    itemHeight: number | null,
     itemColumnSpan: StaggeredItemSpan
     update: (width: number, x: number, y: number) => void
 }
@@ -36,6 +49,9 @@ export interface GridItemData {
 export interface StaggeredGridItemProps {
     spans?: StaggeredItemSpan,
     index: number,
+    position?: number,
+    onUpdatePosition?: (pos: number) => void,
+    draggable?: boolean,
 }
 
 

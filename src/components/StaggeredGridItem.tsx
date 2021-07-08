@@ -7,11 +7,14 @@ export default class StaggeredGridItem extends React.Component<StaggeredGridItem
     static contextType = StaggeredGridContext
 
     static defaultProps = {
-        spans: StaggeredItemSpan.Single
+        spans: StaggeredItemSpan.Single,
+        position: -1,
+        onUpdatePosition: (pos: number) => {
+        },
+        draggable: true,
     }
 
-    itemWidth = 0
-    itemHeight = 0
+    //State Variables
 
     state = {
         translateX: 0,
@@ -19,15 +22,32 @@ export default class StaggeredGridItem extends React.Component<StaggeredGridItem
         itemWidth: 0
     }
 
+    stateUpdating = false
+    nextStateUpdate = () => {
+
+    }
+
     itemElementRef: HTMLElement | null = null
 
     updateTranslate = (width: number, x: number, y: number) => {
-        if (this.state.itemWidth !== width || x !== this.state.translateX || y !== this.state.translateY) {
-            this.setState({
-                itemWidth: width,
-                translateX: x,
-                translateY: y,
-            })
+        if (!this.stateUpdating) {
+            if (this.state.itemWidth !== width || x !== this.state.translateX || y !== this.state.translateY) {
+                this.nextStateUpdate = () => {
+                }
+                this.stateUpdating = true
+                this.setState({
+                    itemWidth: width,
+                    translateX: x,
+                    translateY: y,
+                }, () => {
+                    this.nextStateUpdate()
+                    this.stateUpdating = false
+                })
+            }
+        } else {
+            this.nextStateUpdate = () => {
+                this.updateTranslate(width, x, y)
+            }
         }
     }
 
@@ -35,7 +55,7 @@ export default class StaggeredGridItem extends React.Component<StaggeredGridItem
      * Reports height and width
      */
     reportData = () => {
-        this.context.itemAdded(this.props.index, this.props.spans, () => this.itemElementRef?.clientWidth, () => this.itemElementRef?.clientHeight, this.updateTranslate)
+        this.context.itemAdded(this.props.index, this.props.spans, this.itemElementRef?.clientWidth, this.itemElementRef?.clientHeight, this.updateTranslate)
     }
 
     componentDidMount() {
@@ -44,7 +64,7 @@ export default class StaggeredGridItem extends React.Component<StaggeredGridItem
 
     componentDidUpdate(prevProps: Readonly<StaggeredGridItemProps & typeof StaggeredGridItem.defaultProps>, prevState: Readonly<StaggeredGridItemState>, snapshot?: any) {
         this.reportData()
-        this.context.itemUpdated(this.props.index)
+        this.context.itemUpdated(this.props.index, this.props.spans, this.itemElementRef?.clientWidth, this.itemElementRef?.clientHeight)
     }
 
     componentWillUnmount() {
@@ -62,7 +82,7 @@ export default class StaggeredGridItem extends React.Component<StaggeredGridItem
                     position: "absolute",
                     transform: `translate(${this.state.translateX}px,${this.state.translateY}px)`,
                     transition: "transform .3s ease-out",
-                    overflowX: "hidden"
+                    overflowX: "hidden",
                 }}
             >
                 {this.props.children}
