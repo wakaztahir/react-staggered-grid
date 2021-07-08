@@ -14,7 +14,7 @@ This is a react component that positions and arranges your items in a staggered 
     className={classes.itemGrid}
     items={items}
     render={(item: Item, index) => {
-        <StaggeredGridItem index={index} key={itemKey} spans={StaggeredItemSpan.Full}>
+        <StaggeredGridItem index={index} key={itemKey} spans={StaggeredItemSpan.Single}>
             <div className={classes.sectionItem}>
                 <Typography variant={"caption"}>
                     {item.title}
