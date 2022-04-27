@@ -1,6 +1,7 @@
 
 import { FC } from "react";
-import StaggeredGrid, { StaggeredGridItem } from "react-staggered-grid";
+import StaggeredGrid from "react-staggered-grid/dist/cjs/types"
+import StaggeredGridItem from "react-staggered-grid/dist/cjs/types/components"
 // import { StaggeredDisplay, StaggeredItemSpan } from "react-staggered-grid";
 
 const Test : FC = () => {

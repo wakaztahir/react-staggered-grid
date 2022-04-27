@@ -10,7 +10,7 @@ import {
 } from "./StaggeredGridModel";
 import {StaggeredGridContext} from "./StaggeredGridContext";
 
-export default class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps<ItemType> & typeof StaggeredGrid.defaultProps, StaggeredGridState> {
+export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps<ItemType> & typeof StaggeredGrid.defaultProps, StaggeredGridState> {
 
     static defaultProps = StaggeredGridDefaultProps
 
