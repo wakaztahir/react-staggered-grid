@@ -135,7 +135,7 @@ export default class StaggeredGrid<ItemType> extends React.Component<StaggeredGr
                     colWidth: this.props.columnWidth,
                     gridWidth: this.state.gridWidth,
                     gridHeight: this.state.gridHeight,
-                    itemAdded: (index: number, itemColumnSpan: StaggeredItemSpan, width: number | null, height: number | null, update: (width: number, x: number, y: number) => void) => {
+                    itemAdded: (index: number, itemColumnSpan: StaggeredItemSpan, width: number | undefined, height: number | undefined, update: (width: number, x: number, y: number) => void) => {
                         this.gridItems[index] = {
                             itemColumnSpan,
                             itemWidth: width,
@@ -143,7 +143,7 @@ export default class StaggeredGrid<ItemType> extends React.Component<StaggeredGr
                             update
                         }
                     },
-                    itemUpdated: (index: number, itemColumnSpan: StaggeredItemSpan, width: number | null, height: number | null) => {
+                    itemUpdated: (index: number, itemColumnSpan: StaggeredItemSpan, width: number | undefined, height: number | undefined) => {
                         let item = this.gridItems[index]
                         if (item.itemColumnSpan !== itemColumnSpan || item.itemWidth !== width || item.itemHeight !== height) {
                             this.gridItems[index] = {
