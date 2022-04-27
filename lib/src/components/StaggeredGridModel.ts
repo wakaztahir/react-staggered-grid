@@ -1,5 +1,3 @@
-import React from "react"
-
 export enum StaggeredItemSpan {
     Zero,
     Single,
@@ -54,7 +52,7 @@ export interface StaggeredGridItemProps {
     position?: number,
     onUpdatePosition?: (pos: number) => void,
     draggable?: boolean,
-    children? : any
+    children?: any
 }
 
 
