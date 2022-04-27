@@ -1,6 +1,6 @@
 {
   "name": "react-staggered-grid",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "React Staggered Grid Component",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",

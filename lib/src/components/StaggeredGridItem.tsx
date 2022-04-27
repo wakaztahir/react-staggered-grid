@@ -81,7 +81,6 @@ export default class StaggeredGridItem extends React.Component<StaggeredGridItem
                     width: this.state.itemWidth + "px",
                     position: "absolute",
                     transform: `translate(${this.state.translateX}px,${this.state.translateY}px)`,
-                    transition: "transform .3s ease-out",
                     overflowX: "hidden",
                 }}
             >
