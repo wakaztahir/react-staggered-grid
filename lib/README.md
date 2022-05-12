@@ -11,7 +11,8 @@ This is a react component that positions and arranges your items in a staggered 
 Here columns will be generated automatically according to fixed width of each item !
 
 ```typescript jsx
-import {StaggeredDisplay, StaggeredGrid, StaggeredGridItem, StaggeredItemSpan} from "react-staggered-grid";
+import {StaggeredDisplay, StaggeredGrid, StaggeredGridItem, StaggeredItemSpan} from "lib/dist/index";
+
 <StaggeredGrid
     display={StaggeredDisplay.Grid}
     items={items}

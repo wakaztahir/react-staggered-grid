@@ -2,15 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="761aed40-e684-4c86-85e8-6db2548fd7ef" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/demo/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/demo/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/demo/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/src/Test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/Test.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/lib/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/lib/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/components/StaggeredGridItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/components/StaggeredGridItem.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/components/StaggeredGridModel.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/components/StaggeredGridModel.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,7 +64,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1652356855471</updated>
-      <workItem from="1652356858007" duration="5727000" />
+      <workItem from="1652356858007" duration="5907000" />
     </task>
     <servers />
   </component>
