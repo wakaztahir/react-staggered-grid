@@ -2,6 +2,10 @@
 
 This is a react component that positions and arranges your items in a staggered grid
 
+## Demo
+
+https://wakaztahir.github.io/react-staggered-grid
+
 ## Install
 
 `npm i react-staggered-grid`
