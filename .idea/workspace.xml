@@ -2,9 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="761aed40-e684-4c86-85e8-6db2548fd7ef" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/demo/demo.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/demo/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/demo/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/demo/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/lib/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/App.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/App.test.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/demo/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/src/Test.tsx" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,6 +25,14 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -44,8 +57,13 @@
     <property name="ts.external.directory.path" value="D:\Programming\Web\react-staggered-grid\lib\node_modules\typescript\lib" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
-  <component name="RunManager">
-    <configuration name="start" type="js.build_tools.npm" nameIsGenerated="true">
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Programming\Web\react-staggered-grid\lib" />
+    </key>
+  </component>
+  <component name="RunManager" selected="npm.demo:start">
+    <configuration name="demo:start" type="js.build_tools.npm">
       <package-json value="$PROJECT_DIR$/demo/package.json" />
       <command value="run" />
       <scripts>
@@ -55,6 +73,25 @@
       <envs />
       <method v="2" />
     </configuration>
+    <configuration name="deploy" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/demo/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="deploy" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="npm.demo:start" />
+      <item itemvalue="npm.deploy" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.deploy" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -64,7 +101,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1652356855471</updated>
-      <workItem from="1652356858007" duration="5907000" />
+      <workItem from="1652356858007" duration="6568000" />
     </task>
     <servers />
   </component>
