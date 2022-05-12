@@ -1,67 +1,35 @@
 {
-  "name": "react-staggered-grid",
-  "version": "1.0.4",
-  "description": "React Staggered Grid Component",
+  "name": "react-ts-lib",
+  "version": "1.0.0",
+  "description": "",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
-  "private" : false,
-  "dependencies": {
- 
-  },
-  "peerDependencies": {
-    "react": "^18.1.0",
-    "react-dom": "^18.1.0"
-  },
+  "files": [
+    "dist"
+  ],
+  "types": "dist/index.d.ts",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "rollup -c",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rimraf dist",
+    "build": "npm run clean && rollup -c"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
+  "keywords": [],
+  "author": "Waqas Tahir",
+  "license": "ISC",
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^22.0.0",
-    "@rollup/plugin-node-resolve": "^13.2.1",
-    "@rollup/plugin-typescript": "^8.3.2",
-    "rollup": "^2.70.2",
-    "rollup-plugin-dts": "^4.2.1",
+    "@rollup/plugin-commonjs": "^20.0.0",
+    "@rollup/plugin-node-resolve": "^13.0.4",
+    "@rollup/plugin-typescript": "^8.2.5",
+    "@types/react": "^17.0.18",
+    "react": "^17.0.2",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.56.2",
+    "rollup-plugin-dts": "^3.0.2",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-terser": "^7.0.2",
-    "@testing-library/jest-dom": "^5.12.0",
-    "@testing-library/react": "^11.2.7",
-    "@testing-library/user-event": "^12.8.3",
-    "@types/jest": "^27.4.1",
-    "@types/node": "^16.11.31",
-    "@types/react": "^18.0.8",
-    "@types/react-dom": "^18.0.0",
-    "react": "^18.1.0",
-    "react-dom": "^18.1.0",
-    "react-scripts": "^5.0.1",
-    "typescript": "^4.2.4",
-    "web-vitals": "^1.1.2"
+    "typescript": "^4.3.5"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/wakaztahir/react-staggered-grid.git"
-  },
-  "files": [
-    "/dist"
-  ]
+  "peerDependencies": {
+    "react": "^17.0.2"
+  }
 }
