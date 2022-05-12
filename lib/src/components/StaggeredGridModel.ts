@@ -1,3 +1,5 @@
+import React from "react";
+
 export enum StaggeredItemSpan {
     Zero,
     Single,
@@ -21,7 +23,7 @@ export interface StaggeredGridProps<Type> {
     alignment?: StaggeredAlignment
     className?: string,
     items: Array<Type>,
-    render: (item: Type, index: number) => any
+    render: (item: Type, index: number) => React.ReactNode | undefined
 }
 
 export const StaggeredGridDefaultProps = {
@@ -52,6 +54,8 @@ export interface StaggeredGridItemProps {
     position?: number,
     onUpdatePosition?: (pos: number) => void,
     draggable?: boolean,
+    style?: React.CSSProperties | undefined,
+    className ?: string | undefined,
     children?: any
 }
 

@@ -1,34 +1,45 @@
+import {FC} from "react";
+import {StaggeredDisplay, StaggeredGrid, StaggeredGridItem, StaggeredItemSpan} from "react-staggered-grid";
 
-import { FC } from "react";
-import StaggeredGrid from "react-staggered-grid/dist/cjs/types"
-import StaggeredGridItem from "react-staggered-grid/dist/cjs/types/components"
-// import { StaggeredDisplay, StaggeredItemSpan } from "react-staggered-grid";
+const Test: FC = () => {
 
-const Test : FC = () => {
-
-    type Item = { 
+    type Item = {
         id: number,
-         //span: StaggeredItemSpan 
+        width: number,
+        height: number,
+        span: StaggeredItemSpan
     }
 
     const items: Array<Item> = []
 
-    for (var i = 0; i < 100; i++) {
+    for (let i = 0; i < 100; i++) {
         items.push({
             id: i,
-            // span: i % 7 == 0 ? StaggeredItemSpan.Full : StaggeredItemSpan.Single
+            width: 300,
+            height: (Math.random() * 300) + 300,
+            span: i % 7 === 0 ? StaggeredItemSpan.Full : StaggeredItemSpan.Single
         });
     }
 
     return (
         <StaggeredGrid
-        //     display={StaggeredDisplay.Grid}
+            display={StaggeredDisplay.Grid}
             items={items}
-            render={(item : Item, index : number) => {
-                <StaggeredGridItem index={index} key={index}>
-                    <h1>item.id</h1>
+            render={(item: Item, index: number) => (
+                <StaggeredGridItem index={index} key={index} style={{transition: "transform 0.3s ease"}}>
+                    <div style={{
+                        width: "300px",
+                        height: item.height + "px",
+                        background: "skyblue",
+                        textAlign: "center",
+                        lineHeight: item.height + "px",
+                        margin: "8px"
+                    }}>
+                        Item {index}
+                    </div>
                 </StaggeredGridItem>
-            }}
+            )
+            }
         />
     )
 }

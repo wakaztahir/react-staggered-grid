@@ -54,7 +54,7 @@ export class StaggeredGridItem extends React.Component<StaggeredGridItemProps & 
     /**
      * Reports height and width
      */
-    reportData(){
+    reportData() {
         (this.context as StaggeredGridContextType).itemAdded(this.props.index, this.props.spans, this.itemElementRef?.clientWidth, this.itemElementRef?.clientHeight, this.updateTranslate)
     }
 
@@ -82,7 +82,9 @@ export class StaggeredGridItem extends React.Component<StaggeredGridItemProps & 
                     position: "absolute",
                     transform: `translate(${this.state.translateX}px,${this.state.translateY}px)`,
                     overflowX: "hidden",
+                    ...this.props.style
                 }}
+                className={this.props.className}
             >
                 {this.props.children}
             </div>
