@@ -17,9 +17,9 @@ import {StaggeredDisplay, StaggeredGrid, StaggeredGridItem, StaggeredItemSpan} f
     display={StaggeredDisplay.Grid}
     items={items}
     render={(item: Item, index: number) => (
-        <StaggeredGridItem index={index} key={index} style={{transition: "transform 0.3s ease"}}>
+        <StaggeredGridItem index={index} key={index} spans={item.span} style={{transition: "transform 0.3s ease"}}>
             <div style={{
-                width: "300px",
+                width: item.width,
                 height: item.height + "px",
                 background: "skyblue",
                 textAlign: "center",
