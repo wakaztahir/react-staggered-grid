@@ -19,6 +19,7 @@ export enum StaggeredAlignment {
 export interface StaggeredGridProps {
     display?: StaggeredDisplay,
     columnWidth?: number,
+    columns?: number;
     alignment?: StaggeredAlignment
     className?: string | undefined,
     children?: ReactNode | undefined,
@@ -27,7 +28,6 @@ export interface StaggeredGridProps {
 export const StaggeredGridDefaultProps = {
     display: StaggeredDisplay.Grid,
     alignment: StaggeredAlignment.Center,
-    columnWidth: 260,
 }
 
 export interface StaggeredGridState {
