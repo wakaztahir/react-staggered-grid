@@ -24,6 +24,9 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
     gridElementRef: HTMLElement | null = null
 
     getColsCount = () => {
+        if (this.props.display === StaggeredDisplay.Linear) {
+            return 1
+        }
         let count = Math.ceil(this.state.gridWidth / this.props.columnWidth) - 1
         if (count < 1 || count === Infinity) {
             return 1
@@ -53,8 +56,15 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
                 try {
                     let x = 0;
                     let y = 0;
-
-                    let itemWidth = (((item.itemColumnSpan === StaggeredItemSpan.Single) || (this.props.display === StaggeredDisplay.Linear)) ? this.props.columnWidth : (item.itemColumnSpan === StaggeredItemSpan.Full) ? (this.state.gridWidth - rowOffset - rowOffset) : 0)
+                    let itemSpan: number = item.itemColumnSpan
+                    if (itemSpan < 0) {
+                        if (itemSpan === StaggeredItemSpan.Full) {
+                            itemSpan = columnCount
+                        } else {
+                            console.error("column span out of bounds")
+                        }
+                    }
+                    let itemWidth = itemSpan * this.props.columnWidth
                     const itemHeight = item.itemHeight
 
                     if (itemHeight != null || itemHeight !== 0 || itemWidth != null || itemWidth !== 0) {
@@ -69,16 +79,16 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
                             colNumber = 0
                             x = 0
                             y = colsHeight[colNumber]
-                            if (item.itemColumnSpan === StaggeredItemSpan.Full) {
+                            if (itemSpan > 1) {
                                 let largeHeight = 0
-                                colsHeight.forEach((height) => {
-                                    if (height > largeHeight) {
-                                        largeHeight = height
+                                for (let i = 0; i < itemSpan; i++) {
+                                    if (colsHeight[i] > largeHeight) {
+                                        largeHeight = colsHeight[i]
                                     }
-                                })
-                                colsHeight.forEach((height, index) => {
-                                    colsHeight[index] = largeHeight + itemHeight!
-                                })
+                                }
+                                for(let i=0;i<itemSpan;i++){
+                                    colsHeight[i] = largeHeight + itemHeight!
+                                }
                                 y = largeHeight
                                 rowWidth = 0
                             } else if (item.itemColumnSpan === StaggeredItemSpan.Single || this.props.display === StaggeredDisplay.Linear) {

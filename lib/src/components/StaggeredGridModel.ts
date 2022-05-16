@@ -1,9 +1,8 @@
 import React, {ReactNode} from "react";
 
 export enum StaggeredItemSpan {
-    Zero,
-    Single,
-    Full,
+    Single = 1,
+    Full = -1,
 }
 
 export enum StaggeredDisplay {
@@ -39,7 +38,7 @@ export interface StaggeredGridState {
 export interface GridItemData {
     itemWidth: number | undefined,
     itemHeight: number | undefined,
-    itemColumnSpan: StaggeredItemSpan
+    itemColumnSpan: StaggeredItemSpan | number
     update: (width: number, x: number, y: number) => void
 }
 
@@ -47,7 +46,7 @@ export interface GridItemData {
 //Staggered Grid Item Model
 
 export interface StaggeredGridItemProps {
-    spans?: StaggeredItemSpan,
+    spans?: StaggeredItemSpan | number,
     index: number,
     position?: number,
     onUpdatePosition?: (pos: number) => void,
