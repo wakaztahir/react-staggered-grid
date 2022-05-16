@@ -29,7 +29,8 @@ function App() {
     }
 
     const [alignment, setAlignment] = useState(StaggeredAlignment.Center)
-    const [display,setDisplay] = useState(StaggeredDisplay.Grid)
+    const [display, setDisplay] = useState(StaggeredDisplay.Grid)
+    const [columnWidth, setColumnWidth] = useState<number>(260)
 
     return (
         <React.Fragment>
@@ -38,11 +39,14 @@ function App() {
                 setAlignment={setAlignment}
                 display={display}
                 setDisplay={setDisplay}
+                columnWidth={columnWidth}
+                setColumnWidth={setColumnWidth}
             />
             <StaggeredGrid
                 display={display}
                 alignment={alignment}
                 items={items}
+                columnWidth={columnWidth}
                 render={(item: Item, index: number) => (
                     <StaggeredGridItem index={index} key={index} spans={item.span}
                                        style={{transition: "transform 0.3s ease"}}>
@@ -69,6 +73,8 @@ interface Options {
     setAlignment: (alignment: StaggeredAlignment) => void;
     display: StaggeredDisplay,
     setDisplay: (display: StaggeredDisplay) => void;
+    columnWidth: number;
+    setColumnWidth: (width: number) => void;
 }
 
 function StaggeredOptions(props: Options) {
@@ -93,6 +99,11 @@ function StaggeredOptions(props: Options) {
                 <option value={StaggeredDisplay.Linear}>Display : Linear</option>
                 <option value={StaggeredDisplay.Grid}>Display : Grid</option>
             </select>
+            <input
+                type="number"
+                value={props.columnWidth}
+                onChange={(e) => props.setColumnWidth(parseInt(e.currentTarget.value))}
+            />
         </div>
     )
 }
