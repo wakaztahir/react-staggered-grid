@@ -80,28 +80,40 @@ interface Options {
 function StaggeredOptions(props: Options) {
     return (
         <div style={{width: "100%", display: "flex", justifyContent: "center", marginTop: "1em"}}>
+            <label htmlFor="alignment">Alignment : </label>
+            &nbsp;&nbsp;
             <select
                 value={props.alignment}
+                id={"alignment"}
                 onChange={(e) => {
                     props.setAlignment(parseInt(e.currentTarget.value))
                 }}
             >
-                <option value={StaggeredAlignment.Start}>Alignment : Start</option>
-                <option value={StaggeredAlignment.Center}>Alignment : Center</option>
-                <option value={StaggeredAlignment.End}>Alignment : End</option>
+                <option value={StaggeredAlignment.Start}>Start</option>
+                <option value={StaggeredAlignment.Center}>Center</option>
+                <option value={StaggeredAlignment.End}>End</option>
             </select>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <label htmlFor="display">Display : </label>
+            &nbsp;&nbsp;
             <select
                 onChange={(e) => {
                     props.setDisplay(parseInt(e.currentTarget.value))
                 }}
                 value={props.display}
+                id={"display"}
             >
                 <option value={StaggeredDisplay.Linear}>Display : Linear</option>
                 <option value={StaggeredDisplay.Grid}>Display : Grid</option>
             </select>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <label htmlFor="columnWidth">Column Width : </label>
+            &nbsp;&nbsp;
             <input
                 type="number"
+                id="columnWidth"
                 value={props.columnWidth}
+                style={{width:"6em"}}
                 onChange={(e) => props.setColumnWidth(parseInt(e.currentTarget.value))}
             />
         </div>
