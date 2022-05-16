@@ -24,7 +24,7 @@ function App() {
         let items1: Array<Item> = []
         for (let i = 0; i < 100; i++) {
             let span = i % 10 === 0 ? StaggeredItemSpan.Full : StaggeredItemSpan.Single
-            items.push({
+            items1.push({
                 id: i,
                 span,
                 width: span === StaggeredItemSpan.Full ? "100%" : columnWidth + "px",
