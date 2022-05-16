@@ -21,7 +21,7 @@ export interface StaggeredGridProps<Type> {
     display?: StaggeredDisplay,
     columnWidth?: number,
     alignment?: StaggeredAlignment
-    className?: string,
+    className?: string | undefined,
     items: Array<Type>,
     render: (item: Type, index: number) => React.ReactNode | undefined
 }
@@ -30,7 +30,7 @@ export const StaggeredGridDefaultProps = {
     display: StaggeredDisplay.Grid,
     alignment: StaggeredAlignment.Center,
     columnWidth: 260,
-    className: ""
+    className: undefined
 }
 
 export interface StaggeredGridState {

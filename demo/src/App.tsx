@@ -18,19 +18,19 @@ function App() {
 
     const items: Array<Item> = []
 
+    const [alignment, setAlignment] = useState(StaggeredAlignment.Center)
+    const [display, setDisplay] = useState(StaggeredDisplay.Grid)
+    const [columnWidth, setColumnWidth] = useState<number>(300)
+
     for (let i = 0; i < 100; i++) {
         let span = i % 10 === 0 ? StaggeredItemSpan.Full : StaggeredItemSpan.Single
         items.push({
             id: i,
             span,
-            width: span === StaggeredItemSpan.Full ? "100%" : "300px",
+            width: span === StaggeredItemSpan.Full ? "100%" : columnWidth + "px",
             height: (Math.random() * 300) + 300,
         });
     }
-
-    const [alignment, setAlignment] = useState(StaggeredAlignment.Center)
-    const [display, setDisplay] = useState(StaggeredDisplay.Grid)
-    const [columnWidth, setColumnWidth] = useState<number>(260)
 
     return (
         <React.Fragment>
@@ -113,7 +113,7 @@ function StaggeredOptions(props: Options) {
                 type="number"
                 id="columnWidth"
                 value={props.columnWidth}
-                style={{width:"6em"}}
+                style={{width: "6em"}}
                 onChange={(e) => props.setColumnWidth(parseInt(e.currentTarget.value))}
             />
         </div>
