@@ -45,9 +45,9 @@ function App() {
             <StaggeredGrid
                 display={display}
                 alignment={alignment}
-                items={items}
                 columnWidth={columnWidth}
-                render={(item: Item, index: number) => (
+            >
+                {items.map((item, index) => (
                     <StaggeredGridItem index={index} key={index} spans={item.span}
                                        style={{transition: "transform 0.3s ease"}}>
                         <div style={{
@@ -61,9 +61,8 @@ function App() {
                             Item {index}
                         </div>
                     </StaggeredGridItem>
-                )
-                }
-            />
+                ))}
+            </StaggeredGrid>
         </React.Fragment>
     )
 }

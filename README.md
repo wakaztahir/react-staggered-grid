@@ -2,10 +2,6 @@
 
 This is a react component that positions and arranges your items in a staggered grid
 
-## Demo
-
-https://wakaztahir.github.io/react-staggered-grid
-
 ## Install
 
 `npm i react-staggered-grid`
@@ -18,10 +14,13 @@ Here columns will be generated automatically according to fixed width of each it
 import {StaggeredDisplay, StaggeredGrid, StaggeredGridItem, StaggeredItemSpan} from "react-staggered-grid";
 
 <StaggeredGrid
-    display={StaggeredDisplay.Grid}
-    items={items}
-    render={(item: Item, index: number) => (
-        <StaggeredGridItem index={index} key={index} spans={item.span} style={{transition: "transform 0.3s ease"}}>
+    display={display}
+    alignment={alignment}
+    columnWidth={columnWidth}
+>
+    {items.map((item, index) => (
+        <StaggeredGridItem index={index} key={index} spans={item.span}
+                           style={{transition: "transform 0.3s ease"}}>
             <div style={{
                 width: item.width,
                 height: item.height + "px",
@@ -33,7 +32,6 @@ import {StaggeredDisplay, StaggeredGrid, StaggeredGridItem, StaggeredItemSpan} f
                 Item {index}
             </div>
         </StaggeredGridItem>
-    )
-    }
-/>
+    ))}
+</StaggeredGrid>
 ```

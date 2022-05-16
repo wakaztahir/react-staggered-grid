@@ -10,7 +10,7 @@ import {
 } from "./StaggeredGridModel";
 import {StaggeredGridContext} from "./StaggeredGridContext";
 
-export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps<ItemType> & typeof StaggeredGrid.defaultProps, StaggeredGridState> {
+export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps & typeof StaggeredGrid.defaultProps, StaggeredGridState> {
 
     static defaultProps = StaggeredGridDefaultProps
 
@@ -172,9 +172,7 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps<
                     }}
                     className={this.props.className}
                 >
-                    {this.props.items.map((item, index) => {
-                        return this.props.render(item, index)
-                    })}
+                    {this.props.children}
                 </div>
             </StaggeredGridContext.Provider>
         )
