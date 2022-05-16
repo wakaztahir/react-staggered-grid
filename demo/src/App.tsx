@@ -7,18 +7,19 @@ import {
     StaggeredItemSpan
 } from "react-staggered-grid";
 
-function App() {
+type Item = {
+    id: number,
+    span: StaggeredItemSpan,
+    width: string,
+    height: number,
+}
 
-    type Item = {
-        id: number,
-        span: StaggeredItemSpan,
-        width: string,
-        height: number,
-    }
+function App() {
 
     const [alignment, setAlignment] = useState(StaggeredAlignment.Center)
     const [display, setDisplay] = useState(StaggeredDisplay.Grid)
     const [columnWidth, setColumnWidth] = useState<number>(300)
+    const [columns,setColumns] = useState<number | undefined>(undefined)
 
     const items: Array<Item> = useMemo(() => {
         let items1: Array<Item> = []
@@ -43,29 +44,53 @@ function App() {
                 setDisplay={setDisplay}
                 columnWidth={columnWidth}
                 setColumnWidth={setColumnWidth}
+                columns={columns}
+                setColumns={setColumns}
             />
             <StaggeredGrid
                 display={display}
                 alignment={alignment}
                 columnWidth={columnWidth}
+                columns={columns}
             >
                 {items.map((item, index) => (
-                    <StaggeredGridItem index={index} key={index} spans={item.span}
-                                       style={{transition: "transform 0.3s ease"}}>
-                        <div style={{
-                            width: item.width,
-                            height: item.height + "px",
-                            background: "skyblue",
-                            textAlign: "center",
-                            lineHeight: item.height + "px",
-                            margin: "8px"
-                        }}>
-                            Item {index}
-                        </div>
-                    </StaggeredGridItem>
+                    <StaggeredTestItem key={index} item={item} index={index}/>
                 ))}
             </StaggeredGrid>
         </React.Fragment>
+    )
+}
+
+interface StaggeredTestItemProps {
+    item: Item,
+    index: number
+}
+
+function StaggeredTestItem(props: StaggeredTestItemProps) {
+    let {item, index} = props
+    let [span, setSpan] = useState(props.item.span)
+    return (
+        <StaggeredGridItem
+            index={index}
+            spans={span}
+            style={{transition: "transform 0.3s ease"}}>
+            <div style={{
+                width: item.width,
+                height: item.height + "px",
+                background: "skyblue",
+                textAlign: "center",
+                margin: "8px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center"
+            }}>
+                <div>Span : <input style={{width: "4em"}} type={"number"} value={span} onChange={(e) => {
+                    setSpan(parseInt(e.currentTarget.value))
+                }}/></div>
+                Name : Item {index}
+            </div>
+        </StaggeredGridItem>
     )
 }
 
@@ -76,6 +101,8 @@ interface Options {
     setDisplay: (display: StaggeredDisplay) => void;
     columnWidth: number;
     setColumnWidth: (width: number) => void;
+    columns : number | undefined;
+    setColumns: (cols : number | undefined) => void;
 }
 
 function StaggeredOptions(props: Options) {
@@ -116,6 +143,16 @@ function StaggeredOptions(props: Options) {
                 value={props.columnWidth}
                 style={{width: "6em"}}
                 onChange={(e) => props.setColumnWidth(parseInt(e.currentTarget.value))}
+            />
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <label htmlFor="columns">Total Columns : </label>
+            &nbsp;&nbsp;
+            <input
+                type="number"
+                id="columns"
+                value={props.columns}
+                style={{width: "6em"}}
+                onChange={(e) => props.setColumns(parseInt(e.currentTarget.value))}
             />
         </div>
     )
