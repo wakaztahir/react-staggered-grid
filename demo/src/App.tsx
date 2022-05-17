@@ -17,11 +17,11 @@ function App() {
     const items: Array<Item> = useMemo(() => {
         let items1: Array<Item> = []
         for (let i = 0; i < 100; i++) {
-            let span = i % 10 === 0 ? StaggeredItemSpan.Full : StaggeredItemSpan.Single
+            let span = Math.floor(Math.random() * 2) + 1
             items1.push({
                 id: i,
                 span,
-                width: span === StaggeredItemSpan.Full ? "100%" : columnWidth + "px",
+                width: "100%",
                 height: (Math.random() * 300) + 300,
             });
         }

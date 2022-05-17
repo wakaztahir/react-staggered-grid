@@ -39,22 +39,22 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
         }
     }
 
-    getColumnWidth(): number {
+    getColumnWidth(gridWidth: number): number {
         if (this.props.columnWidth != null) {
             return this.props.columnWidth
-        } else if (this.props.columns != null && this.props.columns > 0 && this.gridWidth > 0) {
-            return this.gridWidth / this.props.columns
+        } else if (this.props.columns != null && this.props.columns > 0 && gridWidth > 0) {
+            return gridWidth / this.props.columns
         } else {
             console.error("columnWidth is zero , columns || columnWidth prop not given to StaggeredGrid")
             return 260
         }
     }
 
-    getColsCount(): number {
+    getColsCount(gridWidth: number): number {
         if (this.props.columns != null && this.props.columns! > 0) {
             return this.props.columns!
         }
-        let count = Math.ceil(this.gridWidth / this.getColumnWidth()) - 1
+        let count = Math.ceil(gridWidth / this.getColumnWidth(gridWidth)) - 1
         if (count < 1 || count === Infinity) {
             return 1
         }
@@ -67,20 +67,15 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
                 this.avoidRepositioning = false
                 return;
             }
-            if (this.gridElementRef != null) {
-                this.gridWidth = this.getGridWidth()
-            }
+            this.gridWidth = this.getGridWidth()
+            let gridWidth = this.gridWidth
             let calculatedGridHeight = 0;
-            let columnWidth = this.getColumnWidth()
+            let columnWidth = this.getColumnWidth(gridWidth)
             let rowWidth = 0;
             let colNumber = 0
-            let columnCount = this.getColsCount()
+            let columnCount = this.getColsCount(gridWidth)
             if (this.gridItems.length < columnCount) {
                 columnCount = this.gridItems.length
-            }
-            let gridWidth = this.gridWidth
-            if (gridWidth == 0) {
-                gridWidth = columnWidth * columnCount
             }
             let colsHeight: number[] = Array(columnCount).fill(0)
             let rowOffset = 0;
@@ -94,52 +89,53 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
 
             this.gridItems.forEach(item => {
                 try {
-                    let x = 0;
-                    let y = 0;
+
+                    // Getting item span
                     let itemSpan: number = item.itemColumnSpan
-                    if (itemSpan < 0) {
+                    if (itemSpan < 1) {
                         if (itemSpan === StaggeredItemSpan.Full) {
                             itemSpan = columnCount
                         } else {
-                            console.error("column span out of bounds")
+                            itemSpan = 1
+                            console.warn("column span out of bounds")
                         }
                     } else if (itemSpan > columnCount && this.props.limitSpan) {
                         itemSpan = columnCount
                     }
+
+                    // Getting item width & height
                     let itemWidth = itemSpan * columnWidth
                     const itemHeight = item.itemHeight
 
-                    if (itemHeight != null || itemHeight !== 0 || itemWidth != null || itemWidth !== 0) {
+                    let x = 0;
+                    let y = 0;
+
+                    if (itemHeight != null && itemHeight !== 0 && itemWidth != null && itemWidth !== 0) {
                         //Calculating Item Offsets
-                        if ((rowWidth + itemWidth) <= (columnCount * columnWidth) && itemSpan === 1) { //Item can be added to current row
+                        if (colNumber + itemSpan <= columnCount) { //Item can be added to current row
                             x = rowWidth
-                            rowWidth += itemWidth
-                            y = colsHeight[colNumber]
-                            colsHeight[colNumber] += itemHeight!
-                            colNumber++
                         } else { //Item cannot be added to current row
                             colNumber = 0
                             x = 0
+                            rowWidth = 0
+                        }
+                        if (itemSpan === 1) {
                             y = colsHeight[colNumber]
-                            if (itemSpan > 1) {
-                                let largeHeight = 0
-                                for (let i = 0; i < itemSpan; i++) {
-                                    if (colsHeight[i] > largeHeight) {
-                                        largeHeight = colsHeight[i]
-                                    }
+                            colsHeight[colNumber] += itemHeight!
+                        } else if (itemSpan > 1) {
+                            let largeHeight = 0
+                            for (let i = colNumber; i < (colNumber + itemSpan); i++) {
+                                if (colsHeight[i] > largeHeight) {
+                                    largeHeight = colsHeight[i]
                                 }
-                                for (let i = 0; i < itemSpan; i++) {
-                                    colsHeight[i] = largeHeight + itemHeight!
-                                }
-                                y = largeHeight
-                                rowWidth = 0
-                            } else if (itemSpan === 1) {
-                                colsHeight[colNumber] += itemHeight!
-                                rowWidth = itemWidth
-                                colNumber++
+                            }
+                            y = largeHeight
+                            for (let i = colNumber; i < (colNumber + itemSpan); i++) {
+                                colsHeight[i] = largeHeight + itemHeight!
                             }
                         }
-
+                        rowWidth += itemWidth
+                        colNumber += itemSpan
                         item.update(itemWidth, (rowOffset + x), y)
                     }
                 } catch (e) {
@@ -182,7 +178,7 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
         return (
             <StaggeredGridContext.Provider
                 value={{
-                    colWidth: this.getColumnWidth(),
+                    colWidth: this.getColumnWidth(this.getGridWidth()),
                     updateItem: (index: number, itemColumnSpan: StaggeredItemSpan, width: number | undefined, height: number | undefined, update: (width: number, x: number, y: number) => void) => {
                         this.gridItems[index] = {
                             itemColumnSpan,

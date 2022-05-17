@@ -24,32 +24,15 @@ export class StaggeredGridItem extends React.Component<StaggeredGridItemProps & 
         itemWidth: 0
     }
 
-    stateUpdating = false
-    nextStateUpdate = () => {
-
-    }
-
     itemElementRef: HTMLElement | null = null
 
     updateTranslate = (width: number, x: number, y: number) => {
-        if (!this.stateUpdating) {
-            if (this.state.itemWidth !== width || x !== this.state.translateX || y !== this.state.translateY) {
-                this.nextStateUpdate = () => {
-                }
-                this.stateUpdating = true
-                this.setState({
-                    itemWidth: width,
-                    translateX: x,
-                    translateY: y,
-                }, () => {
-                    this.nextStateUpdate()
-                    this.stateUpdating = false
-                })
-            }
-        } else {
-            this.nextStateUpdate = () => {
-                this.updateTranslate(width, x, y)
-            }
+        if (this.state.itemWidth !== width || x !== this.state.translateX || y !== this.state.translateY) {
+            this.setState({
+                itemWidth: width,
+                translateX: x,
+                translateY: y,
+            })
         }
     }
 
