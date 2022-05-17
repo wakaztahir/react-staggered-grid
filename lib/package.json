@@ -1,6 +1,6 @@
 {
   "name": "react-staggered-grid",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -13,8 +13,17 @@
     "clean": "rimraf dist",
     "build": "npm run clean && rollup -c"
   },
-  "keywords": [],
+  "keywords": [
+    "react",
+    "staggered",
+    "grid",
+    "masonry"
+  ],
   "author": "Waqas Tahir",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wakaztahir/react-staggered-grid.git"
+  },
   "license": "ISC",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^20.0.0",
