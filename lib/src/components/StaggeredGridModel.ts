@@ -5,11 +5,6 @@ export enum StaggeredItemSpan {
     Full = -1,
 }
 
-export enum StaggeredDisplay {
-    Linear,
-    Grid
-}
-
 export enum StaggeredAlignment {
     Start,
     Center,
@@ -17,22 +12,27 @@ export enum StaggeredAlignment {
 }
 
 export interface StaggeredGridProps {
-    display?: StaggeredDisplay,
     columnWidth?: number,
     columns?: number;
     alignment?: StaggeredAlignment
     className?: string | undefined,
     children?: ReactNode | undefined,
+    style?: React.CSSProperties | undefined,
+    useElementWidth : boolean,
+    gridWidth?: number,
+    limitSpan: boolean,
+    calculateHeight: boolean,
 }
 
 export const StaggeredGridDefaultProps = {
-    display: StaggeredDisplay.Grid,
     alignment: StaggeredAlignment.Center,
+    limitSpan: true,
+    calculateHeight: true,
+    useElementWidth : false,
 }
 
 export interface StaggeredGridState {
-    gridWidth: number,
-    gridHeight: number,
+    calculatedGridHeight: number,
 }
 
 export interface GridItemData {

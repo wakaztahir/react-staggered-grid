@@ -1,11 +1,5 @@
 import React, {useMemo, useState} from "react"
-import {
-    StaggeredAlignment,
-    StaggeredDisplay,
-    StaggeredGrid,
-    StaggeredGridItem,
-    StaggeredItemSpan
-} from "react-staggered-grid";
+import {StaggeredAlignment, StaggeredGrid, StaggeredGridItem, StaggeredItemSpan} from "react-staggered-grid";
 
 type Item = {
     id: number,
@@ -17,9 +11,8 @@ type Item = {
 function App() {
 
     const [alignment, setAlignment] = useState(StaggeredAlignment.Center)
-    const [display, setDisplay] = useState(StaggeredDisplay.Grid)
     const [columnWidth, setColumnWidth] = useState<number>(300)
-    const [columns,setColumns] = useState<number | undefined>(undefined)
+    const [columns, setColumns] = useState<number | undefined>(undefined)
 
     const items: Array<Item> = useMemo(() => {
         let items1: Array<Item> = []
@@ -40,18 +33,17 @@ function App() {
             <StaggeredOptions
                 alignment={alignment}
                 setAlignment={setAlignment}
-                display={display}
-                setDisplay={setDisplay}
                 columnWidth={columnWidth}
                 setColumnWidth={setColumnWidth}
                 columns={columns}
                 setColumns={setColumns}
             />
             <StaggeredGrid
-                display={display}
                 alignment={alignment}
                 columnWidth={columnWidth}
                 columns={columns}
+                style={{background: "#e3e3e3"}}
+                useElementWidth={true}
             >
                 {items.map((item, index) => (
                     <StaggeredTestItem key={index} item={item} index={index}/>
@@ -97,64 +89,62 @@ function StaggeredTestItem(props: StaggeredTestItemProps) {
 interface Options {
     alignment: StaggeredAlignment,
     setAlignment: (alignment: StaggeredAlignment) => void;
-    display: StaggeredDisplay,
-    setDisplay: (display: StaggeredDisplay) => void;
     columnWidth: number;
     setColumnWidth: (width: number) => void;
-    columns : number | undefined;
-    setColumns: (cols : number | undefined) => void;
+    columns: number | undefined;
+    setColumns: (cols: number | undefined) => void;
 }
 
 function StaggeredOptions(props: Options) {
     return (
-        <div style={{width: "100%", display: "flex", justifyContent: "center", marginTop: "1em"}}>
-            <label htmlFor="alignment">Alignment : </label>
-            &nbsp;&nbsp;
-            <select
-                value={props.alignment}
-                id={"alignment"}
-                onChange={(e) => {
-                    props.setAlignment(parseInt(e.currentTarget.value))
-                }}
-            >
-                <option value={StaggeredAlignment.Start}>Start</option>
-                <option value={StaggeredAlignment.Center}>Center</option>
-                <option value={StaggeredAlignment.End}>End</option>
-            </select>
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <label htmlFor="display">Display : </label>
-            &nbsp;&nbsp;
-            <select
-                onChange={(e) => {
-                    props.setDisplay(parseInt(e.currentTarget.value))
-                }}
-                value={props.display}
-                id={"display"}
-            >
-                <option value={StaggeredDisplay.Linear}>Display : Linear</option>
-                <option value={StaggeredDisplay.Grid}>Display : Grid</option>
-            </select>
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <label htmlFor="columnWidth">Column Width : </label>
-            &nbsp;&nbsp;
-            <input
-                type="number"
-                id="columnWidth"
-                value={props.columnWidth}
-                style={{width: "6em"}}
-                onChange={(e) => props.setColumnWidth(parseInt(e.currentTarget.value))}
-            />
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <label htmlFor="columns">Total Columns : </label>
-            &nbsp;&nbsp;
-            <input
-                type="number"
-                id="columns"
-                value={props.columns}
-                style={{width: "6em"}}
-                onChange={(e) => props.setColumns(parseInt(e.currentTarget.value))}
-            />
-        </div>
+        <React.Fragment>
+            <div style={{width: "100%", height: "3em"}}/>
+            <div style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                padding: "1em 0em",
+                position: "fixed",
+                top: 0,
+                left: 0,
+                zIndex: 99,
+                background: "rgba(255,255,255,.3)"
+            }}>
+                <label htmlFor="alignment">Alignment : </label>
+                &nbsp;&nbsp;
+                <select
+                    value={props.alignment}
+                    id={"alignment"}
+                    onChange={(e) => {
+                        props.setAlignment(parseInt(e.currentTarget.value))
+                    }}
+                >
+                    <option value={StaggeredAlignment.Start}>Start</option>
+                    <option value={StaggeredAlignment.Center}>Center</option>
+                    <option value={StaggeredAlignment.End}>End</option>
+                </select>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <label htmlFor="columnWidth">Column Width : </label>
+                &nbsp;&nbsp;
+                <input
+                    type="number"
+                    id="columnWidth"
+                    value={props.columnWidth}
+                    style={{width: "6em"}}
+                    onChange={(e) => props.setColumnWidth(parseInt(e.currentTarget.value))}
+                />
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <label htmlFor="columns">Total Columns : </label>
+                &nbsp;&nbsp;
+                <input
+                    type="number"
+                    id="columns"
+                    defaultValue={props.columns}
+                    style={{width: "6em"}}
+                    onChange={(e) => props.setColumns(parseInt(e.currentTarget.value))}
+                />
+            </div>
+        </React.Fragment>
     )
 }
 
