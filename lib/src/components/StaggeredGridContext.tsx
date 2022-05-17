@@ -3,16 +3,13 @@ import {StaggeredItemSpan} from "./StaggeredGridModel";
 
 export type StaggeredGridContextType = {
     colWidth: number,
-    recalculate: () => void,
-    updateItem: (index: number, itemColumnSpan: StaggeredItemSpan, width: number | undefined, height: number | undefined, update: (width: number, x: number, y: number) => void) => void,
+    updateItem: (index: number, itemColumnSpan: StaggeredItemSpan | number, width: number | undefined, height: number | undefined, update: (width: number, x: number, y: number) => void) => void,
     removeItem: (index: number) => void,
 }
 
 const defaultValue = {
     colWidth: 400,
-    recalculate: () => {
-    },
-    updateItem: (index: number, itemColumnSpan: StaggeredItemSpan, width: number | undefined, height: number | undefined, update: (width: number, x: number, y: number) => void) => {
+    updateItem: (index: number, itemColumnSpan: StaggeredItemSpan | number, width: number | undefined, height: number | undefined, update: (width: number, x: number, y: number) => void) => {
     },
     removeItem: (index: number) => {
     },

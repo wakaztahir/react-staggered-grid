@@ -18,7 +18,7 @@ export interface StaggeredGridProps {
     className?: string | undefined,
     children?: ReactNode | undefined,
     style?: React.CSSProperties | undefined,
-    useElementWidth : boolean,
+    useElementWidth: boolean,
     gridWidth?: number,
     limitSpan: boolean,
     calculateHeight: boolean,
@@ -28,7 +28,7 @@ export const StaggeredGridDefaultProps = {
     alignment: StaggeredAlignment.Center,
     limitSpan: true,
     calculateHeight: true,
-    useElementWidth : false,
+    useElementWidth: false,
 }
 
 export interface StaggeredGridState {
@@ -46,14 +46,14 @@ export interface GridItemData {
 //Staggered Grid Item Model
 
 export interface StaggeredGridItemProps {
+    initialWidth?: number,
+    initialTranslateX?: number,
+    initialTranslateY?: number,
     spans?: StaggeredItemSpan | number,
     index: number,
-    position?: number,
-    onUpdatePosition?: (pos: number) => void,
-    draggable?: boolean,
     style?: React.CSSProperties | undefined,
     className?: string | undefined,
-    children?: any
+    children?: ReactNode | undefined,
 }
 
 

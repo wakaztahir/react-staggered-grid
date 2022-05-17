@@ -9,19 +9,18 @@ export class StaggeredGridItem extends React.Component<StaggeredGridItemProps & 
     context!: React.ContextType<typeof StaggeredGridContext>
 
     static defaultProps = {
+        initialWidth: 0,
+        initialTranslateX: 0,
+        initialTranslateY: 0,
         spans: StaggeredItemSpan.Single,
-        position: -1,
-        onUpdatePosition: (pos: number) => {
-        },
-        draggable: true,
     }
 
     //State Variables
 
     state = {
-        translateX: 0,
-        translateY: 0,
-        itemWidth: 0
+        translateX: this.props.initialTranslateX,
+        translateY: this.props.initialTranslateY,
+        itemWidth: this.props.initialWidth
     }
 
     itemElementRef: HTMLElement | null = null
@@ -49,9 +48,6 @@ export class StaggeredGridItem extends React.Component<StaggeredGridItemProps & 
 
     componentDidUpdate(prevProps: Readonly<StaggeredGridItemProps & typeof StaggeredGridItem.defaultProps>, prevState: Readonly<StaggeredGridItemState>, snapshot?: any) {
         this.reportData();
-        if (prevProps.spans != this.props.spans) {
-            this.context.recalculate()
-        }
     }
 
     componentWillUnmount() {

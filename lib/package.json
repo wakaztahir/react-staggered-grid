@@ -24,6 +24,7 @@
     "type": "git",
     "url": "https://github.com/wakaztahir/react-staggered-grid.git"
   },
+  "homepage": "https://wakaztahir.github.io/react-staggered-grid",
   "license": "ISC",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^20.0.0",

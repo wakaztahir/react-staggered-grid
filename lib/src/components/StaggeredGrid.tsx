@@ -87,7 +87,7 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
                 rowOffset = gridWidth - (columnCount * columnWidth)
             }
 
-            this.gridItems.forEach(item => {
+            this.gridItems.forEach((item, index) => {
                 try {
 
                     // Getting item span
@@ -137,6 +137,8 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
                         rowWidth += itemWidth
                         colNumber += itemSpan
                         item.update(itemWidth, (rowOffset + x), y)
+                    } else {
+                        console.warn("item at index " + index + " has undefined width || height")
                     }
                 } catch (e) {
                     console.warn(e)
@@ -168,6 +170,38 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
         this.reposition()
     }
 
+    updateItem(index: number, itemColumnSpan: StaggeredItemSpan | number, width: number | undefined, height: number | undefined, update: (width: number, x: number, y: number) => void) {
+        if (this.gridItems[index] != null) {
+            // Checking if repositioning is needed
+            let reposition: boolean = false
+            if (itemColumnSpan !== this.gridItems[index].itemColumnSpan) {
+                reposition = true
+            }
+            // Updating Object
+            this.gridItems[index].itemColumnSpan = itemColumnSpan
+            this.gridItems[index].itemWidth = width
+            this.gridItems[index].itemHeight = height
+            this.gridItems[index].update = update
+
+            // Repositioning Items
+            if (reposition) this.reposition()
+        } else {
+            // Creating object because doesn't exist
+            this.gridItems[index] = {
+                itemColumnSpan,
+                itemWidth: width,
+                itemHeight: height,
+                update
+            }
+        }
+    }
+
+    removeItem(index: number) {
+        if (this.gridItems[index] != null) {
+            this.gridItems.splice(index, 1)
+        }
+    }
+
     render() {
         let heightProp: React.CSSProperties
         if (this.props.calculateHeight) {
@@ -179,20 +213,8 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
             <StaggeredGridContext.Provider
                 value={{
                     colWidth: this.getColumnWidth(this.getGridWidth()),
-                    updateItem: (index: number, itemColumnSpan: StaggeredItemSpan, width: number | undefined, height: number | undefined, update: (width: number, x: number, y: number) => void) => {
-                        this.gridItems[index] = {
-                            itemColumnSpan,
-                            itemWidth: width,
-                            itemHeight: height,
-                            update
-                        }
-                    },
-                    removeItem: (index: number) => {
-                        if (this.gridItems[index] != null) {
-                            this.gridItems.splice(index, 1)
-                        }
-                    },
-                    recalculate: this.reposition
+                    updateItem: this.updateItem.bind(this),
+                    removeItem: this.removeItem.bind(this),
                 }}>
                 <div
                     ref={(element) => {
