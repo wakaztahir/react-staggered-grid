@@ -1,10 +1,12 @@
 import React from "react";
-import {StaggeredGridContext, StaggeredGridContextType} from "./StaggeredGridContext";
+import {StaggeredGridContext} from "./StaggeredGridContext";
 import {StaggeredGridItemProps, StaggeredGridItemState, StaggeredItemSpan} from "./StaggeredGridModel";
 
 export class StaggeredGridItem extends React.Component<StaggeredGridItemProps & typeof StaggeredGridItem.defaultProps, StaggeredGridItemState> {
 
     static contextType = StaggeredGridContext
+
+    context!: React.ContextType<typeof StaggeredGridContext>
 
     static defaultProps = {
         spans: StaggeredItemSpan.Single,
@@ -55,7 +57,7 @@ export class StaggeredGridItem extends React.Component<StaggeredGridItemProps & 
      * Reports height and width
      */
     reportData() {
-        (this.context as StaggeredGridContextType).itemAdded(this.props.index, this.props.spans, this.itemElementRef?.clientWidth, this.itemElementRef?.clientHeight, this.updateTranslate)
+        this.context.updateItem(this.props.index, this.props.spans, this.itemElementRef?.clientWidth, this.itemElementRef?.clientHeight, this.updateTranslate)
     }
 
     componentDidMount() {
@@ -64,11 +66,13 @@ export class StaggeredGridItem extends React.Component<StaggeredGridItemProps & 
 
     componentDidUpdate(prevProps: Readonly<StaggeredGridItemProps & typeof StaggeredGridItem.defaultProps>, prevState: Readonly<StaggeredGridItemState>, snapshot?: any) {
         this.reportData();
-        (this.context as StaggeredGridContextType).itemUpdated(this.props.index, this.props.spans, this.itemElementRef?.clientWidth, this.itemElementRef?.clientHeight)
+        if (prevProps.spans != this.props.spans) {
+            this.context.recalculate()
+        }
     }
 
     componentWillUnmount() {
-        (this.context as StaggeredGridContextType).itemRemoved(this.props.index)
+        this.context.removeItem(this.props.index)
     }
 
     render() {

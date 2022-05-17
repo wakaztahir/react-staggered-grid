@@ -4,20 +4,17 @@ import {StaggeredItemSpan} from "./StaggeredGridModel";
 export type StaggeredGridContextType = {
     colWidth: number,
     recalculate: () => void,
-    itemAdded: (index: number, itemColumnSpan: StaggeredItemSpan, width: number | undefined, height: number | undefined, update: (width: number, x: number, y: number) => void) => void,
-    itemUpdated: (index: number, itemColumnSpan: StaggeredItemSpan, width: number | undefined, height: number | undefined,) => void,
-    itemRemoved: (index: number) => void,
+    updateItem: (index: number, itemColumnSpan: StaggeredItemSpan, width: number | undefined, height: number | undefined, update: (width: number, x: number, y: number) => void) => void,
+    removeItem: (index: number) => void,
 }
 
 const defaultValue = {
     colWidth: 400,
     recalculate: () => {
     },
-    itemAdded: (index: number, itemColumnSpan: StaggeredItemSpan, width: number | undefined, height: number | undefined, update: (width: number, x: number, y: number) => void) => {
+    updateItem: (index: number, itemColumnSpan: StaggeredItemSpan, width: number | undefined, height: number | undefined, update: (width: number, x: number, y: number) => void) => {
     },
-    itemUpdated: (index: number, itemColumnSpan: StaggeredItemSpan, width: number | undefined, height: number | undefined,) => {
-    },
-    itemRemoved: (index: number) => {
+    removeItem: (index: number) => {
     },
 }
 

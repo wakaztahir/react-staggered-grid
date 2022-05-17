@@ -22,6 +22,7 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
     }
 
     gridElementRef: HTMLElement | null = null
+
     getGridWidth(): number {
         if (this.props.gridWidth != null) {
             return this.props.gridWidth
@@ -182,7 +183,7 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
             <StaggeredGridContext.Provider
                 value={{
                     colWidth: this.getColumnWidth(),
-                    itemAdded: (index: number, itemColumnSpan: StaggeredItemSpan, width: number | undefined, height: number | undefined, update: (width: number, x: number, y: number) => void) => {
+                    updateItem: (index: number, itemColumnSpan: StaggeredItemSpan, width: number | undefined, height: number | undefined, update: (width: number, x: number, y: number) => void) => {
                         this.gridItems[index] = {
                             itemColumnSpan,
                             itemWidth: width,
@@ -190,19 +191,7 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
                             update
                         }
                     },
-                    itemUpdated: (index: number, itemColumnSpan: StaggeredItemSpan, width: number | undefined, height: number | undefined) => {
-                        let item = this.gridItems[index]
-                        if (item.itemColumnSpan !== itemColumnSpan || item.itemWidth !== width || item.itemHeight !== height) {
-                            this.gridItems[index] = {
-                                ...item,
-                                itemColumnSpan,
-                                itemWidth: width,
-                                itemHeight: height,
-                            }
-                            this.reposition()
-                        }
-                    },
-                    itemRemoved: (index: number) => {
+                    removeItem: (index: number) => {
                         if (this.gridItems[index] != null) {
                             this.gridItems.splice(index, 1)
                         }
