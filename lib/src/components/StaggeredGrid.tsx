@@ -170,7 +170,7 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
         this.reposition()
     }
 
-    updateItem(index: number, itemColumnSpan: StaggeredItemSpan | number, width: number | undefined, height: number | undefined, update: (width: number, x: number, y: number) => void) {
+    updateItem(index: number, itemColumnSpan: StaggeredItemSpan | number, height: number | undefined, update: (width: number, x: number, y: number) => void) {
         if (this.gridItems[index] != null) {
             // Checking if repositioning is needed
             let reposition: boolean = false
@@ -179,7 +179,6 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
             }
             // Updating Object
             this.gridItems[index].itemColumnSpan = itemColumnSpan
-            this.gridItems[index].itemWidth = width
             this.gridItems[index].itemHeight = height
             this.gridItems[index].update = update
 
@@ -189,7 +188,6 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
             // Creating object because doesn't exist
             this.gridItems[index] = {
                 itemColumnSpan,
-                itemWidth: width,
                 itemHeight: height,
                 update
             }

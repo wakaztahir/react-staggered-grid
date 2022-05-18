@@ -42,7 +42,6 @@ export interface StaggeredGridState {
 }
 
 export interface GridItemData {
-    itemWidth: number | undefined,
     itemHeight: number | undefined,
     itemColumnSpan: StaggeredItemSpan | number
     update: (width: number, x: number, y: number) => void

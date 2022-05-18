@@ -39,7 +39,7 @@ export class StaggeredGridItem extends React.Component<StaggeredGridItemProps & 
      * Reports height and width
      */
     reportData() {
-        this.context.updateItem(this.props.index, this.props.spans, this.itemElementRef?.clientWidth, this.itemElementRef?.clientHeight, this.updateTranslate)
+        this.context.updateItem(this.props.index, this.props.spans, this.itemElementRef?.clientHeight, this.updateTranslate)
     }
 
     componentDidMount() {

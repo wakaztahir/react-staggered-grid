@@ -16,7 +16,7 @@ export function useStaggeredItemPosition<T extends HTMLElement>(index: number, s
     }
 
     useEffect(() => {
-        context.updateItem(index, spans, ref.current?.clientWidth, ref.current?.clientHeight, updateTranslate)
+        context.updateItem(index, spans, ref.current?.clientHeight, updateTranslate)
     }, [index, spans, ref.current])
 
     return itemPos
