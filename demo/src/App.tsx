@@ -4,7 +4,7 @@ import {StaggeredAlignment, StaggeredGrid, StaggeredGridItem, StaggeredItemSpan}
 type Item = {
     id: number,
     span: StaggeredItemSpan,
-    width: string,
+    width: number,
     height: number,
 }
 
@@ -16,21 +16,27 @@ function App() {
     const [horizontalGap, setHorizontalGap] = useState(10)
     const [verticalGap, setVerticalGap] = useState(10)
     const [images, setImages] = useState(false)
+    const [multiSpan, setMultiSpan] = useState(false)
     const [fitHorizontalGap, setFitHorizontalGap] = useState(true)
 
     const items: Array<Item> = useMemo(() => {
         let items1: Array<Item> = []
-        for (let i = 0; i < 100; i++) {
-            let span = Math.floor(Math.random() * 2) + 1
+        for (let i = 0; i < 20; i++) {
+            let span: number
+            if (multiSpan) {
+                span = Math.floor(Math.random() * (columns || 2)) + 1
+            } else {
+                span = 1
+            }
             items1.push({
                 id: i,
                 span,
-                width: "100%",
+                width: span * columnWidth,
                 height: (Math.random() * 300) + 300,
             });
         }
         return items1
-    }, [])
+    }, [columnWidth, multiSpan, columns])
 
     return (
         <React.Fragment>
@@ -49,6 +55,8 @@ function App() {
                 setFitHorizontalGap={setFitHorizontalGap}
                 images={images}
                 setImages={setImages}
+                multiSpan={multiSpan}
+                setMultiSpan={setMultiSpan}
             />
             <StaggeredGrid
                 alignment={alignment}
@@ -64,7 +72,8 @@ function App() {
                     images ? (
                         <StaggeredImageItem key={index} item={item} index={index} columnWidth={columnWidth}/>
                     ) : (
-                        <StaggeredTestItem key={index} item={item} index={index} columnWidth={columnWidth}/>
+                        <StaggeredTestItem key={index + "s" + item.span} item={item} index={index}
+                                           columnWidth={columnWidth}/>
                     )
                 ))}
             </StaggeredGrid>
@@ -80,7 +89,7 @@ interface StaggeredTestItemProps {
 
 function StaggeredTestItem(props: StaggeredTestItemProps) {
     let {item, index} = props
-    let [span, setSpan] = useState(props.item.span)
+    let [span, setSpan] = useState(item.span)
     return (
         <StaggeredGridItem
             index={index}
@@ -89,7 +98,7 @@ function StaggeredTestItem(props: StaggeredTestItemProps) {
             itemHeight={item.height} // when not given , a ref is used to get element height
         >
             <div style={{
-                width: item.width,
+                width: "100%",
                 height: item.height + "px",
                 background: "skyblue",
                 textAlign: "center",
@@ -111,11 +120,12 @@ function StaggeredImageItem(props: StaggeredTestItemProps) {
     let {item, index} = props
     let height = Math.floor(item.height)
     const imageUrl = useMemo(() => {
-        return "https://picsum.photos/" + props.columnWidth + "/" + height
+        return "https://picsum.photos/" + item.width + "/" + height
     }, [])
     return (
         <StaggeredGridItem
             index={index}
+            spans={item.span}
             style={{transition: "left 0.3s ease,top 0.3s ease", overflowX: "hidden"}}
             itemHeight={height} // when not given , a ref is used to get element height
         >
@@ -139,6 +149,8 @@ interface Options {
     setFitHorizontalGap: (fit: boolean) => void;
     images: boolean,
     setImages: (set: boolean) => void;
+    multiSpan: boolean,
+    setMultiSpan: (multi: boolean) => void;
 }
 
 function StaggeredOptions(props: Options) {
@@ -161,6 +173,11 @@ function StaggeredOptions(props: Options) {
                 &nbsp;&nbsp;
                 <input type={"checkbox"} checked={props.images}
                        onChange={(e) => props.setImages(e.currentTarget.checked)}/>
+                &nbsp;&nbsp;&nbsp;
+                <label htmlFor="multiSpan">Multi Span: </label>
+                &nbsp;&nbsp;
+                <input type={"checkbox"} checked={props.multiSpan}
+                       onChange={(e) => props.setMultiSpan(e.currentTarget.checked)}/>
                 <label htmlFor="alignment">Alignment : </label>
                 &nbsp;&nbsp;
                 <select
