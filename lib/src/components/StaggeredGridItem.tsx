@@ -1,6 +1,12 @@
 import React from "react";
 import {StaggeredGridContext} from "./StaggeredGridContext";
-import {StaggeredGridItemProps, StaggeredGridItemState, StaggeredItemSpan} from "./StaggeredGridModel";
+import {PositionedItem, StaggeredGridItemProps, StaggeredItemSpan} from "./StaggeredGridModel";
+
+interface StaggeredGridItemState {
+    translateX: number,
+    translateY: number,
+    width: number
+}
 
 export class StaggeredGridItem extends React.Component<StaggeredGridItemProps & typeof StaggeredGridItem.defaultProps, StaggeredGridItemState> {
 
@@ -17,18 +23,18 @@ export class StaggeredGridItem extends React.Component<StaggeredGridItemProps & 
 
     //State Variables
 
-    state = {
+    state: PositionedItem = {
         translateX: this.props.initialTranslateX,
         translateY: this.props.initialTranslateY,
-        itemWidth: this.props.initialWidth
+        width: this.props.initialWidth
     }
 
     itemElementRef: HTMLElement | null = null
 
     updateTranslate = (width: number, x: number, y: number) => {
-        if (this.state.itemWidth !== width || x !== this.state.translateX || y !== this.state.translateY) {
+        if (this.state.width !== width || x !== this.state.translateX || y !== this.state.translateY) {
             this.setState({
-                itemWidth: width,
+                width: width,
                 translateX: x,
                 translateY: y,
             })
@@ -54,18 +60,27 @@ export class StaggeredGridItem extends React.Component<StaggeredGridItemProps & 
         this.context.removeItem(this.props.index)
     }
 
+    transform(itemPos: PositionedItem): React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> {
+        if (this.props.transform != null) {
+            return this.props.transform(itemPos)
+        }
+        return {
+            style: {
+                position: "absolute",
+                width: itemPos.width + "px",
+                transform: `translate(${itemPos.translateX}px,${itemPos.translateY}px)`,
+                overflowX: "hidden",
+                ...this.props.style
+            }
+        }
+    }
+
     render() {
         return (
             <div
+                {...this.transform(this.state)}
                 ref={(element) => {
                     this.itemElementRef = element
-                }}
-                style={{
-                    width: this.state.itemWidth + "px",
-                    position: "absolute",
-                    transform: `translate(${this.state.translateX}px,${this.state.translateY}px)`,
-                    overflowX: "hidden",
-                    ...this.props.style
                 }}
                 className={this.props.className}
             >

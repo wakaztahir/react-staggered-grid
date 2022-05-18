@@ -1,20 +1,13 @@
-import {StaggeredGridItemProps, StaggeredItemSpan} from "./StaggeredGridModel";
-import React, {useContext, useEffect, useRef, useState} from "react";
+import {PositionedItem, StaggeredGridItemProps, StaggeredItemSpan} from "./StaggeredGridModel";
+import React, {RefObject, useContext, useEffect, useRef, useState} from "react";
 import {StaggeredGridContext} from "./StaggeredGridContext";
 
-type PositionedItem = {
-    width: number,
-    translateX: number,
-    translateY: number,
-}
+export function useStaggeredItemPosition<T extends HTMLElement>(index: number, spans: number, ref: RefObject<T>, initialWidth: number = 0, initialTranslateX: number = 0, initialTranslateY: number = 0): PositionedItem {
 
-export function StaggeredGridItemFunctional(props: StaggeredGridItemProps & typeof StaggeredGridItemFunctional.defaultProps) {
-
-    const elementRef = useRef<HTMLDivElement>(null)
     const [itemPos, setItemPos] = useState<PositionedItem>({
-        width: props.initialWidth,
-        translateX: props.initialTranslateX,
-        translateY: props.initialTranslateY
+        width: initialWidth,
+        translateX: initialTranslateX,
+        translateY: initialTranslateY
     })
     const context = useContext(StaggeredGridContext)
 
@@ -22,7 +15,22 @@ export function StaggeredGridItemFunctional(props: StaggeredGridItemProps & type
         setItemPos({width, translateX, translateY})
     }
 
+    useEffect(() => {
+        context.updateItem(index, spans, ref.current?.clientWidth, ref.current?.clientHeight, updateTranslate)
+    }, [index, spans, ref.current])
+
+    return itemPos
+}
+
+export function StaggeredGridItemFunctional(props: StaggeredGridItemProps & typeof StaggeredGridItemFunctional.defaultProps) {
+
+    const elementRef = useRef<HTMLDivElement>(null)
+    const itemPos = useStaggeredItemPosition(props.index, props.spans, elementRef, props.initialWidth, props.initialTranslateX, props.initialTranslateY)
+
     function transform(itemPos: PositionedItem): React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> {
+        if (props.transform != null) {
+            return props.transform(itemPos)
+        }
         return {
             style: {
                 position: "absolute",
@@ -33,10 +41,6 @@ export function StaggeredGridItemFunctional(props: StaggeredGridItemProps & type
             }
         }
     }
-
-    useEffect(() => {
-        context.updateItem(props.index, props.spans, elementRef.current?.clientWidth, elementRef.current?.clientHeight, updateTranslate)
-    }, [props, props.index, props.spans, elementRef.current])
 
     return (
         <div {...transform(itemPos)} ref={elementRef} className={props.className}>

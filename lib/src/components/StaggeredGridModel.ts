@@ -11,6 +11,12 @@ export enum StaggeredAlignment {
     End,
 }
 
+export interface PositionedItem {
+    width: number,
+    translateX: number,
+    translateY: number,
+}
+
 export interface StaggeredGridProps {
     columnWidth?: number,
     columns?: number;
@@ -54,11 +60,5 @@ export interface StaggeredGridItemProps {
     style?: React.CSSProperties | undefined,
     className?: string | undefined,
     children?: ReactNode | undefined,
-}
-
-
-export interface StaggeredGridItemState {
-    translateX: number,
-    translateY: number,
-    itemWidth: number
+    transform?(itemPos: PositionedItem): React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>
 }
