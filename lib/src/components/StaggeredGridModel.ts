@@ -54,6 +54,7 @@ export interface StaggeredGridItemProps {
     initialWidth?: number,
     initialTranslateX?: number,
     initialTranslateY?: number,
+    itemHeight ?: number,
     spans?: StaggeredItemSpan | number,
     index: number,
     style?: React.CSSProperties | undefined,
