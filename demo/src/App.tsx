@@ -15,6 +15,7 @@ function App() {
     const [columns, setColumns] = useState<number | undefined>(undefined)
     const [horizontalGap, setHorizontalGap] = useState(10)
     const [verticalGap, setVerticalGap] = useState(10)
+    const [images, setImages] = useState(false)
     const [fitHorizontalGap, setFitHorizontalGap] = useState(true)
 
     const items: Array<Item> = useMemo(() => {
@@ -46,6 +47,8 @@ function App() {
                 setVerticalGap={setVerticalGap}
                 fitHorizontalGap={fitHorizontalGap}
                 setFitHorizontalGap={setFitHorizontalGap}
+                images={images}
+                setImages={setImages}
             />
             <StaggeredGrid
                 alignment={alignment}
@@ -58,7 +61,11 @@ function App() {
                 fitHorizontalGap={fitHorizontalGap}
             >
                 {items.map((item, index) => (
-                    <StaggeredTestItem key={index} item={item} index={index}/>
+                    images ? (
+                        <StaggeredImageItem key={index} item={item} index={index} columnWidth={columnWidth}/>
+                    ) : (
+                        <StaggeredTestItem key={index} item={item} index={index} columnWidth={columnWidth}/>
+                    )
                 ))}
             </StaggeredGrid>
         </React.Fragment>
@@ -67,7 +74,8 @@ function App() {
 
 interface StaggeredTestItemProps {
     item: Item,
-    index: number
+    index: number,
+    columnWidth: number,
 }
 
 function StaggeredTestItem(props: StaggeredTestItemProps) {
@@ -99,6 +107,23 @@ function StaggeredTestItem(props: StaggeredTestItemProps) {
     )
 }
 
+function StaggeredImageItem(props: StaggeredTestItemProps) {
+    let {item, index} = props
+    let height = Math.floor(item.height)
+    const imageUrl = useMemo(() => {
+        return "https://picsum.photos/" + props.columnWidth + "/" + height
+    }, [])
+    return (
+        <StaggeredGridItem
+            index={index}
+            style={{transition: "left 0.3s ease,top 0.3s ease", overflowX: "hidden"}}
+            itemHeight={height} // when not given , a ref is used to get element height
+        >
+            <img src={imageUrl} alt={"Random Image"}/>
+        </StaggeredGridItem>
+    )
+}
+
 interface Options {
     alignment: StaggeredAlignment,
     setAlignment: (alignment: StaggeredAlignment) => void;
@@ -112,6 +137,8 @@ interface Options {
     setVerticalGap: (gap: number) => void;
     fitHorizontalGap: boolean,
     setFitHorizontalGap: (fit: boolean) => void;
+    images: boolean,
+    setImages: (set: boolean) => void;
 }
 
 function StaggeredOptions(props: Options) {
@@ -129,6 +156,11 @@ function StaggeredOptions(props: Options) {
                 zIndex: 99,
                 background: "rgba(255,255,255,.3)"
             }}>
+                &nbsp;&nbsp;&nbsp;
+                <label htmlFor="fitHorizontalGap">Show Images: </label>
+                &nbsp;&nbsp;
+                <input type={"checkbox"} checked={props.images}
+                       onChange={(e) => props.setImages(e.currentTarget.checked)}/>
                 <label htmlFor="alignment">Alignment : </label>
                 &nbsp;&nbsp;
                 <select
