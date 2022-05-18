@@ -38,8 +38,8 @@ export function StaggeredGridItemFunctional(props: StaggeredGridItemProps & type
             style: {
                 position: "absolute",
                 width: itemPos.width + "px",
-                transform: `translate(${itemPos.translateX}px,${itemPos.translateY}px)`,
-                overflowX: "hidden",
+                left: itemPos.translateX + "px",
+                top: itemPos.translateY + "px",
                 ...props.style
             }
         }

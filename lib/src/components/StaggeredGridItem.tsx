@@ -62,8 +62,8 @@ export class StaggeredGridItem extends React.Component<StaggeredGridItemProps & 
             style: {
                 position: "absolute",
                 width: itemPos.width + "px",
-                transform: `translate(${itemPos.translateX}px,${itemPos.translateY}px)`,
-                overflowX: "hidden",
+                left: itemPos.translateX + "px",
+                top: itemPos.translateY + "px",
                 ...this.props.style
             }
         }

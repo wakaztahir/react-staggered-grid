@@ -1,5 +1,5 @@
 import React, {useMemo, useState} from "react"
-import {StaggeredAlignment, StaggeredGrid, StaggeredGridItem,StaggeredGridItemFunctional, StaggeredItemSpan} from "react-staggered-grid";
+import {StaggeredAlignment, StaggeredGrid, StaggeredGridItem, StaggeredItemSpan} from "react-staggered-grid";
 
 type Item = {
     id: number,
@@ -13,6 +13,9 @@ function App() {
     const [alignment, setAlignment] = useState(StaggeredAlignment.Center)
     const [columnWidth, setColumnWidth] = useState<number>(300)
     const [columns, setColumns] = useState<number | undefined>(undefined)
+    const [horizontalGap, setHorizontalGap] = useState(10)
+    const [verticalGap, setVerticalGap] = useState(10)
+    const [fitHorizontalGap, setFitHorizontalGap] = useState(true)
 
     const items: Array<Item> = useMemo(() => {
         let items1: Array<Item> = []
@@ -26,7 +29,7 @@ function App() {
             });
         }
         return items1
-    }, [columnWidth])
+    }, [])
 
     return (
         <React.Fragment>
@@ -37,6 +40,12 @@ function App() {
                 setColumnWidth={setColumnWidth}
                 columns={columns}
                 setColumns={setColumns}
+                horizontalGap={horizontalGap}
+                setHorizontalGap={setHorizontalGap}
+                verticalGap={verticalGap}
+                setVerticalGap={setVerticalGap}
+                fitHorizontalGap={fitHorizontalGap}
+                setFitHorizontalGap={setFitHorizontalGap}
             />
             <StaggeredGrid
                 alignment={alignment}
@@ -44,6 +53,9 @@ function App() {
                 columns={columns}
                 style={{background: "#e3e3e3"}}
                 useElementWidth={true}
+                horizontalGap={horizontalGap}
+                verticalGap={verticalGap}
+                fitHorizontalGap={fitHorizontalGap}
             >
                 {items.map((item, index) => (
                     <StaggeredTestItem key={index} item={item} index={index}/>
@@ -65,15 +77,14 @@ function StaggeredTestItem(props: StaggeredTestItemProps) {
         <StaggeredGridItem
             index={index}
             spans={span}
-            style={{transition: "transform 0.3s ease"}}
-            itemHeight={item.height + 8} // when not given , a ref is used to get element height
+            style={{transition: "left 0.3s ease,top 0.3s ease"}}
+            itemHeight={item.height} // when not given , a ref is used to get element height
         >
             <div style={{
                 width: item.width,
                 height: item.height + "px",
                 background: "skyblue",
                 textAlign: "center",
-                margin: "8px",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
@@ -95,6 +106,12 @@ interface Options {
     setColumnWidth: (width: number) => void;
     columns: number | undefined;
     setColumns: (cols: number | undefined) => void;
+    horizontalGap: number,
+    verticalGap: number,
+    setHorizontalGap: (gap: number) => void;
+    setVerticalGap: (gap: number) => void;
+    fitHorizontalGap: boolean,
+    setFitHorizontalGap: (fit: boolean) => void;
 }
 
 function StaggeredOptions(props: Options) {
@@ -125,26 +142,54 @@ function StaggeredOptions(props: Options) {
                     <option value={StaggeredAlignment.Center}>Center</option>
                     <option value={StaggeredAlignment.End}>End</option>
                 </select>
-                &nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;
                 <label htmlFor="columnWidth">Column Width : </label>
                 &nbsp;&nbsp;
                 <input
                     type="number"
                     id="columnWidth"
                     value={props.columnWidth}
-                    style={{width: "6em"}}
+                    style={{width: "4em"}}
                     onChange={(e) => props.setColumnWidth(parseInt(e.currentTarget.value))}
                 />
-                &nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;
                 <label htmlFor="columns">Total Columns : </label>
                 &nbsp;&nbsp;
                 <input
                     type="number"
                     id="columns"
+                    min={0}
                     defaultValue={props.columns}
-                    style={{width: "6em"}}
+                    style={{width: "4em"}}
                     onChange={(e) => props.setColumns(parseInt(e.currentTarget.value))}
                 />
+                &nbsp;&nbsp;&nbsp;
+                <label htmlFor="horizontalGap">Horizontal Gap : </label>
+                &nbsp;&nbsp;
+                <input
+                    type="number"
+                    id="horizontalGap"
+                    min={0}
+                    defaultValue={props.horizontalGap}
+                    style={{width: "4em"}}
+                    onChange={(e) => props.setHorizontalGap(parseInt(e.currentTarget.value))}
+                />
+                &nbsp;&nbsp;&nbsp;
+                <label htmlFor="verticalGap">Vertical Gap : </label>
+                &nbsp;&nbsp;
+                <input
+                    type="number"
+                    id="verticalGap"
+                    defaultValue={props.verticalGap}
+                    min={0}
+                    style={{width: "4em"}}
+                    onChange={(e) => props.setVerticalGap(parseInt(e.currentTarget.value))}
+                />
+                &nbsp;&nbsp;&nbsp;
+                <label htmlFor="fitHorizontalGap">Fit Horizontal Gap : </label>
+                &nbsp;&nbsp;
+                <input type={"checkbox"} checked={props.fitHorizontalGap}
+                       onChange={(e) => props.setFitHorizontalGap(e.currentTarget.checked)}/>
             </div>
         </React.Fragment>
     )

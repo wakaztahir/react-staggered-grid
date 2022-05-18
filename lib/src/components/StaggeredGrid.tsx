@@ -2,7 +2,6 @@ import React from "react";
 import {
     GridItemData,
     StaggeredAlignment,
-    StaggeredGridDefaultProps,
     StaggeredGridProps,
     StaggeredGridState,
     StaggeredItemSpan,
@@ -11,7 +10,16 @@ import {StaggeredGridContext} from "./StaggeredGridContext";
 
 export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps & typeof StaggeredGrid.defaultProps, StaggeredGridState> {
 
-    static defaultProps = StaggeredGridDefaultProps
+    static defaultProps = {
+        alignment: StaggeredAlignment.Center,
+        limitSpan: true,
+        calculateHeight: true,
+        useElementWidth: false,
+        horizontalGap: 0,
+        verticalGap: 0,
+        repositionOnResize: false,
+        fitHorizontalGap: false,
+    }
 
     avoidRepositioning: boolean = false // when true , repositioning is avoided for one call !
     gridWidth: number = 0
@@ -29,9 +37,10 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
         } else if (this.props.columns != null && this.props.columnWidth != null && !this.props.useElementWidth) {
             return this.props.columns * this.props.columnWidth
         } else if (this.gridElementRef != null) {
-            let gw = this.gridElementRef.clientWidth
+            const gw = this.gridElementRef.clientWidth
             if (gw == null || gw == 0) {
                 console.error("gridWidth is zero , gridWidth prop || css width property should be given to StaggeredGrid")
+                return 0
             }
             return gw
         } else {
@@ -58,6 +67,9 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
         if (count < 1 || count === Infinity) {
             return 1
         }
+        if (this.gridItems.length < count) {
+            return this.gridItems.length
+        }
         return count
     }
 
@@ -68,28 +80,32 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
                 return;
             }
             this.gridWidth = this.getGridWidth()
-            let gridWidth = this.gridWidth
-            let calculatedGridHeight = 0;
+            const gridWidth = this.gridWidth
+            const horizontalGap = this.props.horizontalGap
+            const verticalGap = this.props.verticalGap
+            const limitSpan = this.props.limitSpan
+            const columnCount = this.getColsCount(gridWidth)
+            if (columnCount < 1) return;
             let columnWidth = this.getColumnWidth(gridWidth)
-            let rowWidth = 0;
-            let colNumber = 0
-            let columnCount = this.getColsCount(gridWidth)
-            if (this.gridItems.length < columnCount) {
-                columnCount = this.gridItems.length
+            if (this.props.fitHorizontalGap) {
+                columnWidth -= (((columnCount - 1) * horizontalGap) / columnCount)
             }
-            let colsHeight: number[] = Array(columnCount).fill(0)
+            const calculatedGridWidth = (columnCount * columnWidth) + (columnCount - 1) * horizontalGap
+            let calculatedGridHeight = 0;
+            let rowWidth = 0;
+            let colNumber = 0;
+            const colsHeight: number[] = Array(columnCount).fill(0)
             let rowOffset = 0;
 
             //Calculating Row Offset
             if (this.props.alignment === StaggeredAlignment.Center) {
-                rowOffset = (gridWidth - (columnCount * columnWidth)) / 2
+                rowOffset = (gridWidth - calculatedGridWidth) / 2
             } else if (this.props.alignment === StaggeredAlignment.End) {
-                rowOffset = gridWidth - (columnCount * columnWidth)
+                rowOffset = gridWidth - calculatedGridWidth
             }
 
             this.gridItems.forEach((item, index) => {
                 try {
-
                     // Getting item span
                     let itemSpan: number = item.itemColumnSpan
                     if (itemSpan < 1) {
@@ -99,12 +115,12 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
                             itemSpan = 1
                             console.warn("column span out of bounds")
                         }
-                    } else if (itemSpan > columnCount && this.props.limitSpan) {
+                    } else if (itemSpan > columnCount && limitSpan) {
                         itemSpan = columnCount
                     }
 
                     // Getting item width & height
-                    let itemWidth = itemSpan * columnWidth
+                    let itemWidth = itemSpan * columnWidth + (Math.max(itemSpan - 1, 0) * horizontalGap)
                     const itemHeight = item.itemHeight
 
                     let x = 0;
@@ -121,7 +137,7 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
                         }
                         if (itemSpan === 1) {
                             y = colsHeight[colNumber]
-                            colsHeight[colNumber] += itemHeight!
+                            colsHeight[colNumber] += itemHeight + verticalGap
                         } else if (itemSpan > 1) {
                             let largeHeight = 0
                             for (let i = colNumber; i < (colNumber + itemSpan); i++) {
@@ -131,10 +147,10 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
                             }
                             y = largeHeight
                             for (let i = colNumber; i < (colNumber + itemSpan); i++) {
-                                colsHeight[i] = largeHeight + itemHeight!
+                                colsHeight[i] = largeHeight + itemHeight + verticalGap
                             }
                         }
-                        rowWidth += itemWidth
+                        rowWidth += itemWidth + horizontalGap
                         colNumber += itemSpan
                         item.update(itemWidth, (rowOffset + x), y)
                     } else {
@@ -162,8 +178,23 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
         }
     }
 
+    onResize() {
+        if (this.gridElementRef != null && this.gridWidth != this.gridElementRef.clientWidth) {
+            this.reposition()
+        }
+    }
+
     componentDidMount() {
         this.reposition()
+        if (this.gridElementRef != null && this.props.repositionOnResize) {
+            window.addEventListener("resize", this.onResize)
+        }
+    }
+
+    componentWillUnmount() {
+        if (this.gridElementRef != null && this.props.repositionOnResize) {
+            window.removeEventListener("resize", this.onResize)
+        }
     }
 
     componentDidUpdate(prevProps: Readonly<{}>, prevState: Readonly<{}>, snapshot?: any) {

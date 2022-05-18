@@ -81,6 +81,17 @@ This is for gridWidth ,when using css styled width , this should be true If you 
 width would be `columns` * `columnWidth` but if you want to force gridWidth to be element width (css styled width) , you
 can pass `useElementWidth = true` and it will get width of the grid using a ref on the parent element
 
+### horizontalGap : number
+
+Increase the gap between items horizontally , 
+This also decreases column width to make space for the gap
+
+`columnWidth = columnWidth - horizontalGap * 2`
+
+### verticalGap : number
+
+Increase the gap between items vertically
+
 ### alignment?: StaggeredAlignment
 
 This should be mostly centered , unless you have a custom gridWidth and you'd like it to translate each item according
@@ -154,9 +165,8 @@ Children of the item
 
 ### transform?
 
-This is a function which gets passed a parameter item position which contains item width , x and y which is
-transformed into props (attributes) for the staggered grid item element It basically tells how to style elements with
-item position
+This is a function which gets passed a parameter item position which contains item width , x and y which is transformed
+into props (attributes) for the staggered grid item element It basically tells how to style elements with item position
 
 By default it uses css property `transform : translate` to translate each item with `position : absolute` relative to
 parent but it can be customized

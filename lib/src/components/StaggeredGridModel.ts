@@ -25,16 +25,13 @@ export interface StaggeredGridProps {
     children?: ReactNode | undefined,
     style?: React.CSSProperties | undefined,
     useElementWidth: boolean,
+    fitHorizontalGap?: boolean,
     gridWidth?: number,
     limitSpan: boolean,
     calculateHeight: boolean,
-}
-
-export const StaggeredGridDefaultProps = {
-    alignment: StaggeredAlignment.Center,
-    limitSpan: true,
-    calculateHeight: true,
-    useElementWidth: false,
+    verticalGap?: number,
+    horizontalGap?: number,
+    repositionOnResize?: boolean
 }
 
 export interface StaggeredGridState {
@@ -54,11 +51,12 @@ export interface StaggeredGridItemProps {
     initialWidth?: number,
     initialTranslateX?: number,
     initialTranslateY?: number,
-    itemHeight ?: number,
+    itemHeight?: number,
     spans?: StaggeredItemSpan | number,
     index: number,
     style?: React.CSSProperties | undefined,
     className?: string | undefined,
     children?: ReactNode | undefined,
+
     transform?(itemPos: PositionedItem): React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>
 }
