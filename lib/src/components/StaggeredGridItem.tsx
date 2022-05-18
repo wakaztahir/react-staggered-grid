@@ -2,13 +2,7 @@ import React from "react";
 import {StaggeredGridContext} from "./StaggeredGridContext";
 import {PositionedItem, StaggeredGridItemProps, StaggeredItemSpan} from "./StaggeredGridModel";
 
-interface StaggeredGridItemState {
-    translateX: number,
-    translateY: number,
-    width: number
-}
-
-export class StaggeredGridItem extends React.Component<StaggeredGridItemProps & typeof StaggeredGridItem.defaultProps, StaggeredGridItemState> {
+export class StaggeredGridItem extends React.Component<StaggeredGridItemProps & typeof StaggeredGridItem.defaultProps, PositionedItem> {
 
     static contextType = StaggeredGridContext
 
@@ -52,7 +46,7 @@ export class StaggeredGridItem extends React.Component<StaggeredGridItemProps & 
         this.reportData()
     }
 
-    componentDidUpdate(prevProps: Readonly<StaggeredGridItemProps & typeof StaggeredGridItem.defaultProps>, prevState: Readonly<StaggeredGridItemState>, snapshot?: any) {
+    componentDidUpdate(prevProps: Readonly<StaggeredGridItemProps & typeof StaggeredGridItem.defaultProps>, prevState: Readonly<PositionedItem>, snapshot?: any) {
         this.reportData();
     }
 
