@@ -19,13 +19,13 @@ function App() {
     const [multiSpan, setMultiSpan] = useState(false)
     const [fitHorizontalGap, setFitHorizontalGap] = useState(true)
 
-    const totalItems = 20
+    const totalItems = 100
 
     // calculating heights array for items
     const randomHeights: Array<number> = useMemo(() => {
         let heights: Array<number> = []
         for (let i = 0; i < totalItems; i++) {
-            heights.push((Math.random() * 300) + 300)
+            heights.push(Math.floor((Math.random() * 300) + 300))
         }
         return heights
     }, [totalItems])
@@ -88,15 +88,13 @@ function App() {
                 horizontalGap={horizontalGap}
                 verticalGap={verticalGap}
                 fitHorizontalGap={fitHorizontalGap}
+                repositionOnResize={true}
             >
                 {items.map((item, index) => {
                     const itemProps: StaggeredTestItemProps = {
                         columnWidth,
                         index,
-                        item,
-                        updateItem(index: number, item: Item): void {
-                            items[index] = item
-                        }
+                        item
                     }
                     return (images ? (
                         <StaggeredImageItem key={"i" + index + "s" + item.span} {...itemProps}/>
@@ -113,17 +111,18 @@ interface StaggeredTestItemProps {
     item: Item,
     index: number,
     columnWidth: number,
-    updateItem: (index: number, item: Item) => void;
 }
 
 function StaggeredTestItem(props: StaggeredTestItemProps) {
     let {item, index} = props
+    let [span, setSpan] = useState(props.item.span)
+    let [height, setHeight] = useState(props.item.height)
     return (
         <StaggeredGridItem
             index={index}
-            spans={item.span}
+            spans={span}
             style={{transition: "left 0.3s ease,top 0.3s ease"}}
-            itemHeight={item.height} // when not given , a ref is used to get element height
+            itemHeight={height} // when not given , a ref is used to get element height
         >
             <div style={{
                 width: "100%",
@@ -135,12 +134,24 @@ function StaggeredTestItem(props: StaggeredTestItemProps) {
                 alignItems: "center",
                 justifyContent: "center"
             }}>
-                <div>Span : <input style={{width: "4em"}} type={"number"} value={item.span} onChange={(e) => {
-                    props.updateItem(index, {
-                        ...item,
-                        span: parseInt(e.currentTarget.value)
-                    })
-                }}/></div>
+                <div>Span : <input
+                    style={{width: "4em"}}
+                    type={"number"}
+                    value={span}
+                    onChange={(e) => {
+                        item.span = parseInt(e.currentTarget.value)
+                        setSpan(item.span)
+                    }}
+                /></div>
+                <div>Height : <input
+                    style={{width: "4em"}}
+                    type={"number"}
+                    value={height}
+                    onChange={(e) => {
+                        item.height = parseInt(e.currentTarget.value)
+                        setHeight(item.height)
+                    }}
+                /></div>
                 Name : Item {index}
             </div>
         </StaggeredGridItem>
@@ -149,16 +160,15 @@ function StaggeredTestItem(props: StaggeredTestItemProps) {
 
 function StaggeredImageItem(props: StaggeredTestItemProps) {
     let {item, index} = props
-    let height = Math.floor(item.height)
     const imageUrl = useMemo(() => {
-        return "https://picsum.photos/" + item.width + "/" + height
+        return "https://picsum.photos/" + item.width + "/" + item.height
     }, [])
     return (
         <StaggeredGridItem
             index={index}
             spans={item.span}
             style={{transition: "left 0.3s ease,top 0.3s ease", overflowX: "hidden"}}
-            itemHeight={height} // when not given , a ref is used to get element height
+            itemHeight={item.height} // when not given , a ref is used to get element height
         >
             <img src={imageUrl} alt={"Random Image"}/>
         </StaggeredGridItem>
