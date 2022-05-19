@@ -87,6 +87,11 @@ Increase the gap between items horizontally , This also decreases column width t
 
 `columnWidth = columnWidth - horizontalGap * 2`
 
+### fitHorizontalGap : boolean
+
+When true , horizontalGap will be subtracted from column width making column width to be decreased to allow for
+horizontal gap , Useful when all columns must fit inside gridWidth regardless of horizontal gap !
+
 ### verticalGap : number
 
 Increase the gap between items vertically
