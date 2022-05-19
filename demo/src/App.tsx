@@ -19,24 +19,45 @@ function App() {
     const [multiSpan, setMultiSpan] = useState(false)
     const [fitHorizontalGap, setFitHorizontalGap] = useState(true)
 
+    const totalItems = 20
+
+    // calculating heights array for items
+    const randomHeights: Array<number> = useMemo(() => {
+        let heights: Array<number> = []
+        for (let i = 0; i < totalItems; i++) {
+            heights.push((Math.random() * 300) + 300)
+        }
+        return heights
+    }, [totalItems])
+
+    // calculating spans for items
+    const randomSpans: Array<number> = useMemo(() => {
+        let spans: Array<number> = []
+        for (let i = 0; i < totalItems; i++) {
+            spans.push(Math.floor(Math.random() * (columns || 2)) + 1)
+        }
+        return spans
+    }, [totalItems, columns])
+
+    // creating items objects
     const items: Array<Item> = useMemo(() => {
         let items1: Array<Item> = []
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < totalItems; i++) {
             let span: number
             if (multiSpan) {
-                span = Math.floor(Math.random() * (columns || 2)) + 1
+                span = randomSpans[i]
             } else {
                 span = 1
             }
             items1.push({
                 id: i,
-                span,
+                span: span,
                 width: span * columnWidth,
-                height: (Math.random() * 300) + 300,
+                height: randomHeights[i],
             });
         }
         return items1
-    }, [columnWidth, multiSpan, columns])
+    }, [totalItems, columnWidth, multiSpan, randomSpans, randomHeights])
 
     return (
         <React.Fragment>
@@ -68,14 +89,21 @@ function App() {
                 verticalGap={verticalGap}
                 fitHorizontalGap={fitHorizontalGap}
             >
-                {items.map((item, index) => (
-                    images ? (
-                        <StaggeredImageItem key={index} item={item} index={index} columnWidth={columnWidth}/>
+                {items.map((item, index) => {
+                    const itemProps: StaggeredTestItemProps = {
+                        columnWidth,
+                        index,
+                        item,
+                        updateItem(index: number, item: Item): void {
+                            items[index] = item
+                        }
+                    }
+                    return (images ? (
+                        <StaggeredImageItem key={"i" + index + "s" + item.span} {...itemProps}/>
                     ) : (
-                        <StaggeredTestItem key={index + "s" + item.span} item={item} index={index}
-                                           columnWidth={columnWidth}/>
-                    )
-                ))}
+                        <StaggeredTestItem key={"t" + index + "s" + item.span} {...itemProps} />
+                    ))
+                })}
             </StaggeredGrid>
         </React.Fragment>
     )
@@ -85,15 +113,15 @@ interface StaggeredTestItemProps {
     item: Item,
     index: number,
     columnWidth: number,
+    updateItem: (index: number, item: Item) => void;
 }
 
 function StaggeredTestItem(props: StaggeredTestItemProps) {
     let {item, index} = props
-    let [span, setSpan] = useState(item.span)
     return (
         <StaggeredGridItem
             index={index}
-            spans={span}
+            spans={item.span}
             style={{transition: "left 0.3s ease,top 0.3s ease"}}
             itemHeight={item.height} // when not given , a ref is used to get element height
         >
@@ -107,8 +135,11 @@ function StaggeredTestItem(props: StaggeredTestItemProps) {
                 alignItems: "center",
                 justifyContent: "center"
             }}>
-                <div>Span : <input style={{width: "4em"}} type={"number"} value={span} onChange={(e) => {
-                    setSpan(parseInt(e.currentTarget.value))
+                <div>Span : <input style={{width: "4em"}} type={"number"} value={item.span} onChange={(e) => {
+                    props.updateItem(index, {
+                        ...item,
+                        span: parseInt(e.currentTarget.value)
+                    })
                 }}/></div>
                 Name : Item {index}
             </div>
