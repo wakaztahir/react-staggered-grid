@@ -34,7 +34,7 @@ import {
         <StaggeredGridItem // or use StaggeredGridItemFunctional
             index={index}
             spans={span}
-            style={{transition: "transform 0.3s ease"}}
+            style={{transition: "left 0.3s ease,top 0.3s ease"}}
             itemHeight={item.height + 8} // when not given , a ref is used to get element height
         >
             <div style={{
@@ -47,12 +47,7 @@ import {
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center"
-            }}>
-                <div>Span : <input style={{width: "4em"}} type={"number"} value={span} onChange={(e) => {
-                    setSpan(parseInt(e.currentTarget.value))
-                }}/></div>
-                Name : Item {index}
-            </div>
+            }} />
         </StaggeredGridItem>
     ))}
 </StaggeredGrid>
@@ -176,5 +171,5 @@ Children of the item
 This is a function which gets passed a parameter item position which contains item width , x and y which is transformed
 into props (attributes) for the staggered grid item element It basically tells how to style elements with item position
 
-By default it uses css property `transform : translate` to translate each item with `position : absolute` relative to
-parent but it can be customized
+By default, it uses css property `left` & `top` to translate each item with `position : absolute` relative to
+parent
