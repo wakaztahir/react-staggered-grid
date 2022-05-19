@@ -163,14 +163,15 @@ function StaggeredImageItem(props: StaggeredTestItemProps) {
     const imageUrl = useMemo(() => {
         return "https://picsum.photos/" + item.width + "/" + item.height
     }, [])
+    const [isLoading, setIsLoading] = useState(true)
     return (
         <StaggeredGridItem
             index={index}
             spans={item.span}
             style={{transition: "left 0.3s ease,top 0.3s ease", overflowX: "hidden"}}
-            itemHeight={item.height} // when not given , a ref is used to get element height
+            isLoading={isLoading}
         >
-            <img src={imageUrl} alt={"Random Image"}/>
+            <img src={imageUrl} alt={"Random Image"} onLoad={() => setIsLoading(false)}/>
         </StaggeredGridItem>
     )
 }

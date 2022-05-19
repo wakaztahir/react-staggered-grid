@@ -2,7 +2,7 @@ import {PositionedItem, StaggeredGridItemProps, StaggeredItemSpan} from "./Stagg
 import React, {RefObject, useContext, useEffect, useRef, useState} from "react";
 import {StaggeredGridContext} from "./StaggeredGridContext";
 
-export function useStaggeredItemPosition<T extends HTMLElement>(index: number, spans: number, itemHeight?: number, ref?: RefObject<T>, initialWidth: number = 0, initialTranslateX: number = 0, initialTranslateY: number = 0): PositionedItem {
+export function useStaggeredItemPosition<T extends HTMLElement>(index: number, spans: number, itemHeight?: number, ref?: RefObject<T>, isLoading: boolean = false, initialWidth: number = 0, initialTranslateX: number = 0, initialTranslateY: number = 0): PositionedItem {
 
     const [itemPos, setItemPos] = useState<PositionedItem>({
         width: initialWidth,
@@ -18,7 +18,7 @@ export function useStaggeredItemPosition<T extends HTMLElement>(index: number, s
     useEffect(() => {
         if (itemHeight == null && ref?.current == null) return
         context.updateItem(index, spans, itemHeight || ref!.current!.clientHeight, updateTranslate)
-    }, [index, spans, ref?.current])
+    }, [index, spans, ref?.current, isLoading])
 
     return itemPos
 }
@@ -29,7 +29,7 @@ export function StaggeredGridItemFunctional(props: StaggeredGridItemProps & type
     if (props.itemHeight == null) {
         elementRef = useRef<HTMLDivElement>(null)
     }
-    const itemPos = useStaggeredItemPosition(props.index, props.spans, props.itemHeight, elementRef, props.initialWidth, props.initialTranslateX, props.initialTranslateY)
+    const itemPos = useStaggeredItemPosition(props.index, props.spans, props.itemHeight, elementRef, props.isLoading, props.initialWidth, props.initialTranslateX, props.initialTranslateY)
 
     function transform(itemPos: PositionedItem): React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> {
         if (props.transform != null) {
@@ -58,4 +58,5 @@ StaggeredGridItemFunctional.defaultProps = {
     initialTranslateX: 0,
     initialTranslateY: 0,
     spans: StaggeredItemSpan.Single,
+    isLoading: false,
 }

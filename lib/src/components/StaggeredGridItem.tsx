@@ -13,6 +13,7 @@ export class StaggeredGridItem extends React.Component<StaggeredGridItemProps & 
         initialTranslateX: 0,
         initialTranslateY: 0,
         spans: StaggeredItemSpan.Single,
+        isLoading : false,
     }
 
     //State Variables

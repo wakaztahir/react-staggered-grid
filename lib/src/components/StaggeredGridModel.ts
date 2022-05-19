@@ -57,6 +57,7 @@ export interface StaggeredGridItemProps {
     style?: React.CSSProperties | undefined,
     className?: string | undefined,
     children?: ReactNode | undefined,
+    isLoading: boolean,
 
     transform?(itemPos: PositionedItem): React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>
 }

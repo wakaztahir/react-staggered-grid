@@ -24,6 +24,7 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
     avoidRepositioning: boolean = false // when true , repositioning is avoided for one call !
     gridWidth: number = 0
     gridItems: Array<GridItemData> = []
+    requestRepositioningId: number | undefined = undefined
 
     state = {
         calculatedGridHeight: 0
@@ -175,8 +176,17 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
         }
     }
 
+    requestReposition = () => {
+        if (this.requestRepositioningId == null) {
+            this.requestRepositioningId = window.requestAnimationFrame(() => {
+                this.requestRepositioningId = undefined
+                this.reposition()
+            })
+        }
+    }
+
     onResize = () => {
-        this.reposition()
+        this.requestReposition()
     }
 
     componentDidMount() {
@@ -193,10 +203,8 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
     }
 
     componentDidUpdate(prevProps: Readonly<{}>, prevState: Readonly<{}>, snapshot?: any) {
-        this.reposition()
+        this.requestReposition()
     }
-
-    updateItemRepositioningReqId: number | undefined = undefined
 
     updateItem(index: number, itemColumnSpan: StaggeredItemSpan | number, height: number, update: (width: number, x: number, y: number) => void) {
         if (this.gridItems[index] != null) {
@@ -212,12 +220,7 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
 
             // Repositioning Items
             if (reposition) {
-                if (this.updateItemRepositioningReqId == null) {
-                    this.updateItemRepositioningReqId = window.requestAnimationFrame(() => {
-                        this.updateItemRepositioningReqId = undefined
-                        this.reposition()
-                    })
-                }
+                this.requestReposition()
             }
         } else {
             // Creating object because doesn't exist
