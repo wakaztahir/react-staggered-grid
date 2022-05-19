@@ -83,8 +83,7 @@ can pass `useElementWidth = true` and it will get width of the grid using a ref 
 
 ### horizontalGap : number
 
-Increase the gap between items horizontally , 
-This also decreases column width to make space for the gap
+Increase the gap between items horizontally , This also decreases column width to make space for the gap
 
 `columnWidth = columnWidth - horizontalGap * 2`
 
@@ -118,6 +117,10 @@ It limits item span into range (0-total column count) , true by default
 Since StaggeredGrid uses translate , it translates items on the page using `position : relative` on the parent Which
 makes the parent element has zero height when it contains height this is by default true , which means that when the
 grid items are positioned , It tracks the total height and sets it later
+
+### repositionOnResize : boolean
+
+when true , reposition will be run when the window is resized , false by default.
 
 ## StaggeredGridItem Props
 
