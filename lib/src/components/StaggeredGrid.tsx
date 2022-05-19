@@ -79,13 +79,14 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
                 this.avoidRepositioning = false
                 return;
             }
+            if (this.gridItems.length === 0) return
             this.gridWidth = this.getGridWidth()
             const gridWidth = this.gridWidth
+            const columnCount = this.getColsCount(gridWidth)
+            if (columnCount < 1) return;
             const horizontalGap = this.props.horizontalGap
             const verticalGap = this.props.verticalGap
             const limitSpan = this.props.limitSpan
-            const columnCount = this.getColsCount(gridWidth)
-            if (columnCount < 1) return;
             let columnWidth = this.getColumnWidth(gridWidth)
             if (this.props.fitHorizontalGap) {
                 columnWidth -= (((columnCount - 1) * horizontalGap) / columnCount)
@@ -123,39 +124,35 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
                     let itemWidth = itemSpan * columnWidth + (Math.max(itemSpan - 1, 0) * horizontalGap)
                     const itemHeight = item.itemHeight
 
-                    let x = 0;
+                    let x: number;
                     let y = 0;
 
-                    if (itemHeight != null && itemHeight !== 0 && itemWidth != null && itemWidth !== 0) {
-                        //Calculating Item Offsets
-                        if (colNumber + itemSpan <= columnCount) { //Item can be added to current row
-                            x = rowWidth
-                        } else { //Item cannot be added to current row
-                            colNumber = 0
-                            x = 0
-                            rowWidth = 0
-                        }
-                        if (itemSpan === 1) {
-                            y = colsHeight[colNumber]
-                            colsHeight[colNumber] += itemHeight + verticalGap
-                        } else if (itemSpan > 1) {
-                            let largeHeight = 0
-                            for (let i = colNumber; i < (colNumber + itemSpan); i++) {
-                                if (colsHeight[i] > largeHeight) {
-                                    largeHeight = colsHeight[i]
-                                }
-                            }
-                            y = largeHeight
-                            for (let i = colNumber; i < (colNumber + itemSpan); i++) {
-                                colsHeight[i] = largeHeight + itemHeight + verticalGap
-                            }
-                        }
-                        rowWidth += itemWidth + horizontalGap
-                        colNumber += itemSpan
-                        item.update(itemWidth, (rowOffset + x), y)
-                    } else {
-                        console.warn("item at index " + index + " has undefined width || height")
+                    //Calculating Item Offsets
+                    if (colNumber + itemSpan <= columnCount) { //Item can be added to current row
+                        x = rowWidth
+                    } else { //Item cannot be added to current row
+                        colNumber = 0
+                        x = 0
+                        rowWidth = 0
                     }
+                    if (itemSpan === 1) {
+                        y = colsHeight[colNumber]
+                        colsHeight[colNumber] += itemHeight + verticalGap
+                    } else if (itemSpan > 1) {
+                        let largeHeight = 0
+                        for (let i = colNumber; i < (colNumber + itemSpan); i++) {
+                            if (colsHeight[i] > largeHeight) {
+                                largeHeight = colsHeight[i]
+                            }
+                        }
+                        y = largeHeight
+                        for (let i = colNumber; i < (colNumber + itemSpan); i++) {
+                            colsHeight[i] = largeHeight + itemHeight + verticalGap
+                        }
+                    }
+                    rowWidth += itemWidth + horizontalGap
+                    colNumber += itemSpan
+                    item.update(itemWidth, (rowOffset + x), y)
                 } catch (e) {
                     console.warn(e)
                 }
@@ -178,10 +175,8 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
         }
     }
 
-    onResize() {
-        if (this.gridElementRef != null && this.gridWidth != this.gridElementRef.clientWidth) {
-            this.reposition()
-        }
+    onResize = () => {
+        this.reposition()
     }
 
     componentDidMount() {
@@ -201,11 +196,13 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
         this.reposition()
     }
 
-    updateItem(index: number, itemColumnSpan: StaggeredItemSpan | number, height: number | undefined, update: (width: number, x: number, y: number) => void) {
+    updateItemRepositioningTimeout: number | undefined = undefined
+
+    updateItem(index: number, itemColumnSpan: StaggeredItemSpan | number, height: number, update: (width: number, x: number, y: number) => void) {
         if (this.gridItems[index] != null) {
             // Checking if repositioning is needed
             let reposition: boolean = false
-            if (itemColumnSpan !== this.gridItems[index].itemColumnSpan) {
+            if (itemColumnSpan !== this.gridItems[index].itemColumnSpan || height !== this.gridItems[index].itemHeight) {
                 reposition = true
             }
             // Updating Object
@@ -214,7 +211,14 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
             this.gridItems[index].update = update
 
             // Repositioning Items
-            if (reposition) this.reposition()
+            if (reposition) {
+                if (this.updateItemRepositioningTimeout == null) {
+                    this.updateItemRepositioningTimeout = window.requestAnimationFrame(() => {
+                        this.updateItemRepositioningTimeout = undefined
+                        this.reposition()
+                    })
+                }
+            }
         } else {
             // Creating object because doesn't exist
             this.gridItems[index] = {

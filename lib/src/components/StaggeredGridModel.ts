@@ -39,7 +39,7 @@ export interface StaggeredGridState {
 }
 
 export interface GridItemData {
-    itemHeight: number | undefined,
+    itemHeight: number,
     itemColumnSpan: StaggeredItemSpan | number
     update: (width: number, x: number, y: number) => void
 }
