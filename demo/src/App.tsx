@@ -130,7 +130,7 @@ function StaggeredTestItem(props: StaggeredTestItemProps) {
     let [height, setHeight] = useState(props.item.height)
 
     return (
-        <StaggeredGridItemFunctional
+        <StaggeredGridItem
             index={index}
             spans={span}
             style={{transition: "left 0.3s ease,top 0.3s ease"}}
@@ -166,7 +166,7 @@ function StaggeredTestItem(props: StaggeredTestItemProps) {
                 /></div>
                 Name : Item {index}
             </div>
-        </StaggeredGridItemFunctional>
+        </StaggeredGridItem>
     )
 }
 
