@@ -1,4 +1,4 @@
-import {PositionedItem, StaggeredGridItemProps, StaggeredItemSpan} from "./StaggeredGridModel";
+import {PositionedItem, StaggeredGridItemProps} from "./StaggeredGridModel";
 import React, {RefObject, useContext, useEffect, useRef, useState} from "react";
 import {StaggeredGridContext} from "./StaggeredGridContext";
 
@@ -6,18 +6,19 @@ export function useStaggeredItemPosition<T extends HTMLElement>(index: number, s
 
     const [itemPos, setItemPos] = useState<PositionedItem>({
         width: initialWidth,
-        translateX: initialTranslateX,
-        translateY: initialTranslateY
+        left: initialTranslateX,
+        top: initialTranslateY
     })
     const context = useContext(StaggeredGridContext)
 
-    function updateTranslate(width: number, translateX: number, translateY: number) {
-        setItemPos({width, translateX, translateY})
-    }
-
     useEffect(() => {
         if (itemHeight == null && ref?.current == null) return
-        context.updateItem(index, spans, itemHeight || ref!.current!.clientHeight, updateTranslate)
+        context.updateItem(index, spans, itemHeight || ref!.current!.clientHeight, (width, x, y) => {
+            setItemPos({width, left: x, top: y})
+        })
+        return () => {
+            context.removeItem(index)
+        }
     }, [index, spans, ref?.current, isLoading])
 
     return itemPos
@@ -39,8 +40,8 @@ export function StaggeredGridItemFunctional(props: StaggeredGridItemProps & type
             style: {
                 position: "absolute",
                 width: itemPos.width + "px",
-                left: itemPos.translateX + "px",
-                top: itemPos.translateY + "px",
+                left: itemPos.left + "px",
+                top: itemPos.top + "px",
                 ...props.style
             }
         }

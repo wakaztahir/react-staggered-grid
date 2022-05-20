@@ -95,7 +95,6 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
                 columnWidth -= (((columnCount - 1) * horizontalGap) / columnCount)
             }
             const calculatedGridWidth = (columnCount * columnWidth) + (columnCount - 1) * horizontalGap
-            let calculatedGridHeight = 0;
             let rowWidth = 0;
             let colNumber = 0;
             const colsHeight: number[] = Array(columnCount).fill(0)
@@ -109,6 +108,7 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
             }
             for (let i = 0; i < this.gridItems.length; i++) {
                 let item = this.gridItems[i]
+                if (!item.mounted) continue;
                 try {
                     // Getting item span
                     let itemSpan: number = item.itemColumnSpan
@@ -161,15 +161,14 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
                 }
             }
             if (this.props.calculateHeight) {
+                let calculatedGridHeight = 0;
                 for (let i = 0; i < colsHeight.length; i++) {
                     if (colsHeight[i] > calculatedGridHeight) {
                         calculatedGridHeight = colsHeight[i]
                     }
                 }
                 if (this.state.calculatedGridHeight !== calculatedGridHeight) {
-                    this.setState({
-                        calculatedGridHeight
-                    })
+                    this.setState({calculatedGridHeight})
                 }
             }
             this.repositionedOnce = true
@@ -250,11 +249,13 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
             this.gridItems[index].itemColumnSpan = itemColumnSpan
             this.gridItems[index].itemHeight = height
             this.gridItems[index].update = update
+            this.gridItems[index].mounted = true
         } else {
             this.gridItems[index] = {
                 itemColumnSpan,
                 itemHeight: height,
-                update
+                update,
+                mounted: true
             }
         }
         if (reposition && this.repositionedOnce) {
@@ -264,7 +265,7 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
 
     removeItem(index: number) {
         if (this.gridItems[index] != null) {
-            this.gridItems.splice(index, 1)
+            this.gridItems[index].mounted = false
             this.requestReposition()
         }
     }

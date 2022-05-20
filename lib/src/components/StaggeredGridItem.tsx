@@ -19,19 +19,19 @@ export class StaggeredGridItem extends React.Component<StaggeredGridItemProps & 
     //State Variables
 
     state: PositionedItem = {
-        translateX: this.props.initialTranslateX,
-        translateY: this.props.initialTranslateY,
+        left: this.props.initialTranslateX,
+        top: this.props.initialTranslateY,
         width: this.props.initialWidth
     }
 
     itemElementRef: HTMLElement | null = null
 
     updateTranslate = (width: number, x: number, y: number) => {
-        if (this.state.width !== width || x !== this.state.translateX || y !== this.state.translateY) {
+        if (this.state.width !== width || x !== this.state.left || y !== this.state.top) {
             this.setState({
                 width: width,
-                translateX: x,
-                translateY: y,
+                left: x,
+                top: y,
             })
         }
     }
@@ -54,6 +54,10 @@ export class StaggeredGridItem extends React.Component<StaggeredGridItemProps & 
         }
     }
 
+    componentWillUnmount() {
+        this.context.removeItem(this.props.index)
+    }
+
     transform(itemPos: PositionedItem): React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> {
         if (this.props.transform != null) {
             return this.props.transform(itemPos)
@@ -62,8 +66,8 @@ export class StaggeredGridItem extends React.Component<StaggeredGridItemProps & 
             style: {
                 position: "absolute",
                 width: itemPos.width + "px",
-                left: itemPos.translateX + "px",
-                top: itemPos.translateY + "px",
+                left: itemPos.left + "px",
+                top: itemPos.top + "px",
                 ...this.props.style
             }
         }

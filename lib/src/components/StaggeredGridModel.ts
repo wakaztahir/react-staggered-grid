@@ -13,8 +13,8 @@ export enum StaggeredAlignment {
 
 export interface PositionedItem {
     width: number,
-    translateX: number,
-    translateY: number,
+    left: number,
+    top: number,
 }
 
 export interface StaggeredGridProps {
@@ -42,7 +42,8 @@ export interface StaggeredGridState {
 
 export interface GridItemData {
     itemHeight: number,
-    itemColumnSpan: StaggeredItemSpan | number
+    itemColumnSpan: StaggeredItemSpan | number,
+    mounted : boolean,
     update: (width: number, x: number, y: number) => void
 }
 

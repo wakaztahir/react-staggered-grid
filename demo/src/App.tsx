@@ -1,5 +1,11 @@
 import React, {useEffect, useMemo, useState} from "react"
-import {StaggeredAlignment, StaggeredGrid, StaggeredGridItem, StaggeredItemSpan} from "react-staggered-grid";
+import {
+    StaggeredAlignment,
+    StaggeredGrid,
+    StaggeredGridItem,
+    StaggeredGridItemFunctional,
+    StaggeredItemSpan
+} from "react-staggered-grid";
 
 type Item = {
     id: number,
@@ -94,9 +100,6 @@ function App() {
                 verticalGap={verticalGap}
                 fitHorizontalGap={fitHorizontalGap}
                 repositionOnResize={true}
-                requestAppend={() => {
-                    setItemsState(pushItems([...itemsState], 10))
-                }}
             >
                 {itemsState.map((item, index) => {
                     const itemProps: StaggeredTestItemProps = {
@@ -127,7 +130,7 @@ function StaggeredTestItem(props: StaggeredTestItemProps) {
     let [height, setHeight] = useState(props.item.height)
 
     return (
-        <StaggeredGridItem
+        <StaggeredGridItemFunctional
             index={index}
             spans={span}
             style={{transition: "left 0.3s ease,top 0.3s ease"}}
@@ -163,7 +166,7 @@ function StaggeredTestItem(props: StaggeredTestItemProps) {
                 /></div>
                 Name : Item {index}
             </div>
-        </StaggeredGridItem>
+        </StaggeredGridItemFunctional>
     )
 }
 
