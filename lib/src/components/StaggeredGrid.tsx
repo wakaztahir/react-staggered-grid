@@ -19,9 +19,10 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
         verticalGap: 0,
         repositionOnResize: false,
         fitHorizontalGap: false,
+        requestAppendScrollTolerance: 20,
     }
 
-    avoidRepositioning: boolean = false // when true , repositioning is avoided for one call !
+    repositionedOnce: boolean = false
     gridWidth: number = 0
     gridItems: Array<GridItemData> = []
     requestRepositioningId: number | undefined = undefined
@@ -81,10 +82,6 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
 
     reposition = () => {
         try {
-            if (this.avoidRepositioning) {
-                this.avoidRepositioning = false
-                return;
-            }
             if (this.gridItems.length === 0) return
             this.gridWidth = this.getGridWidth()
             const gridWidth = this.gridWidth
@@ -170,12 +167,12 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
                     }
                 }
                 if (this.state.calculatedGridHeight !== calculatedGridHeight) {
-                    this.avoidRepositioning = true
                     this.setState({
                         calculatedGridHeight
                     })
                 }
             }
+            this.repositionedOnce = true
         } catch (e) {
             console.error(e)
         }
@@ -194,10 +191,29 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
         this.requestReposition()
     }
 
+    onScroll = () => {
+        if (this.gridElementRef == null || this.state.calculatedGridHeight == null) {
+            if (!this.props.calculateHeight) {
+                console.warn("calculateHeight must be true for requestAppend to work !")
+            }
+            return
+        }
+        const offset = this.gridElementRef.getBoundingClientRect().top - (this.gridElementRef.offsetParent?.getBoundingClientRect().top || 0);
+        const top = window.pageYOffset + window.innerHeight - offset;
+        if (top >= this.gridElementRef.scrollHeight - this.props.requestAppendScrollTolerance) {
+            if (this.props.requestAppend != null) {
+                this.props.requestAppend()
+            }
+        }
+    }
+
     componentDidMount() {
         this.reposition()
         if (this.gridElementRef != null && this.props.repositionOnResize) {
             window.addEventListener("resize", this.onResize)
+        }
+        if (this.props.requestAppend != null) {
+            document.addEventListener("scroll", this.onScroll)
         }
     }
 
@@ -205,41 +221,53 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
         if (this.gridElementRef != null && this.props.repositionOnResize) {
             window.removeEventListener("resize", this.onResize)
         }
+        if (this.props.requestAppend != null) {
+            document.removeEventListener("scroll", this.onScroll)
+        }
     }
 
-    componentDidUpdate(prevProps: Readonly<{}>, prevState: Readonly<{}>, snapshot?: any) {
-        this.requestReposition()
+    componentDidUpdate(prevProps: Readonly<StaggeredGridProps & typeof StaggeredGrid.defaultProps>, prevState: Readonly<StaggeredGridState>, snapshot?: any) {
+        if (prevProps.columns !== this.props.columns ||
+            prevProps.columnWidth !== this.props.columnWidth ||
+            prevProps.gridWidth !== this.props.gridWidth ||
+            prevProps.calculateHeight !== this.props.calculateHeight ||
+            prevProps.horizontalGap !== this.props.horizontalGap ||
+            prevProps.fitHorizontalGap !== this.props.fitHorizontalGap ||
+            prevProps.limitSpan !== this.props.limitSpan ||
+            prevProps.alignment !== this.props.alignment ||
+            prevProps.children !== this.props.children
+        ) {
+            this.requestReposition()
+        }
     }
 
     updateItem(index: number, itemColumnSpan: StaggeredItemSpan | number, height: number, update: (width: number, x: number, y: number) => void) {
+        let reposition: boolean = false
         if (this.gridItems[index] != null) {
-            // Checking if repositioning is needed
-            let reposition: boolean = false
             if (itemColumnSpan !== this.gridItems[index].itemColumnSpan || height !== this.gridItems[index].itemHeight) {
                 reposition = true
+                console.log("item updated")
             }
-            // Updating Object
             this.gridItems[index].itemColumnSpan = itemColumnSpan
             this.gridItems[index].itemHeight = height
             this.gridItems[index].update = update
-
-            // Repositioning Items
-            if (reposition) {
-                this.requestReposition()
-            }
         } else {
-            // Creating object because doesn't exist
             this.gridItems[index] = {
                 itemColumnSpan,
                 itemHeight: height,
                 update
             }
+            console.log("item added")
+        }
+        if (reposition && this.repositionedOnce) {
+            this.requestReposition()
         }
     }
 
     removeItem(index: number) {
         if (this.gridItems[index] != null) {
             this.gridItems.splice(index, 1)
+            this.requestReposition()
         }
     }
 

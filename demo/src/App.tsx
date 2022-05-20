@@ -1,11 +1,5 @@
 import React, {useEffect, useMemo, useState} from "react"
-import {
-    StaggeredAlignment,
-    StaggeredGrid,
-    StaggeredGridItem,
-    StaggeredGridItemFunctional,
-    StaggeredItemSpan
-} from "react-staggered-grid";
+import {StaggeredAlignment, StaggeredGrid, StaggeredGridItem, StaggeredItemSpan} from "react-staggered-grid";
 
 type Item = {
     id: number,
@@ -18,14 +12,14 @@ function App() {
 
     const [alignment, setAlignment] = useState(StaggeredAlignment.Center)
     const [columnWidth, setColumnWidth] = useState<number>(300)
-    const [columns, setColumns] = useState<number | undefined>(undefined)
+    const [columns, setColumns] = useState<number>(0)
     const [horizontalGap, setHorizontalGap] = useState(10)
     const [verticalGap, setVerticalGap] = useState(10)
     const [images, setImages] = useState(false)
     const [multiSpan, setMultiSpan] = useState(false)
     const [fitHorizontalGap, setFitHorizontalGap] = useState(true)
 
-    const totalItems = 100
+    const totalItems = 20
 
     // calculating heights array for items
     const randomHeights: Array<number> = useMemo(() => {
@@ -40,29 +34,34 @@ function App() {
     const randomSpans: Array<number> = useMemo(() => {
         let spans: Array<number> = []
         for (let i = 0; i < totalItems; i++) {
-            spans.push(Math.floor(Math.random() * (columns || 2)) + 1)
+            spans.push(Math.floor(Math.random() * 2) + 1)
         }
         return spans
-    }, [totalItems, columns])
+    }, [totalItems])
 
-    // creating items objects
-    const items: Array<Item> = useMemo(() => {
-        let items1: Array<Item> = []
-        for (let i = 0; i < totalItems; i++) {
+    function pushItems(items: Item[], total: number) {
+        for (let i = 0; i < total; i++) {
             let span: number
             if (multiSpan) {
                 span = randomSpans[i]
             } else {
                 span = 1
             }
-            items1.push({
+            items.push({
                 id: i,
                 span: span,
                 width: span * columnWidth,
                 height: randomHeights[i],
             });
         }
-        return items1
+        return items
+    }
+
+    let [itemsState, setItemsState] = useState<Item[]>([])
+
+    // creating items objects
+    useEffect(() => {
+        setItemsState(pushItems([], totalItems))
     }, [totalItems, columnWidth, multiSpan, randomSpans, randomHeights])
 
     return (
@@ -89,14 +88,17 @@ function App() {
                 alignment={alignment}
                 columnWidth={columnWidth}
                 columns={columns}
-                style={{background: "#e3e3e3"}}
+                style={{background: "#e3e3e3", marginTop: "1em"}}
                 useElementWidth={true}
                 horizontalGap={horizontalGap}
                 verticalGap={verticalGap}
                 fitHorizontalGap={fitHorizontalGap}
                 repositionOnResize={true}
+                requestAppend={() => {
+                    setItemsState(pushItems([...itemsState], 10))
+                }}
             >
-                {items.map((item, index) => {
+                {itemsState.map((item, index) => {
                     const itemProps: StaggeredTestItemProps = {
                         columnWidth,
                         index,
@@ -188,8 +190,8 @@ interface Options {
     setAlignment: (alignment: StaggeredAlignment) => void;
     columnWidth: number;
     setColumnWidth: (width: number) => void;
-    columns: number | undefined;
-    setColumns: (cols: number | undefined) => void;
+    columns: number;
+    setColumns: (cols: number) => void;
     horizontalGap: number,
     verticalGap: number,
     setHorizontalGap: (gap: number) => void;
@@ -247,6 +249,7 @@ function StaggeredOptions(props: Options) {
                     type="number"
                     id="columnWidth"
                     value={props.columnWidth}
+                    min={0}
                     style={{width: "4em"}}
                     onChange={(e) => props.setColumnWidth(parseInt(e.currentTarget.value))}
                 />
@@ -256,8 +259,8 @@ function StaggeredOptions(props: Options) {
                 <input
                     type="number"
                     id="columns"
+                    value={props.columns}
                     min={0}
-                    defaultValue={props.columns}
                     style={{width: "4em"}}
                     onChange={(e) => props.setColumns(parseInt(e.currentTarget.value))}
                 />

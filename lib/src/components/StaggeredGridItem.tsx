@@ -1,6 +1,6 @@
 import React from "react";
 import {StaggeredGridContext} from "./StaggeredGridContext";
-import {PositionedItem, StaggeredGridItemProps, StaggeredItemSpan} from "./StaggeredGridModel";
+import {PositionedItem, StaggeredGridItemProps} from "./StaggeredGridModel";
 
 export class StaggeredGridItem extends React.Component<StaggeredGridItemProps & typeof StaggeredGridItem.defaultProps, PositionedItem> {
 
@@ -13,7 +13,7 @@ export class StaggeredGridItem extends React.Component<StaggeredGridItemProps & 
         initialTranslateX: 0,
         initialTranslateY: 0,
         spans: 1,
-        isLoading : false,
+        isLoading: false,
     }
 
     //State Variables
@@ -49,7 +49,9 @@ export class StaggeredGridItem extends React.Component<StaggeredGridItemProps & 
     }
 
     componentDidUpdate(prevProps: Readonly<StaggeredGridItemProps & typeof StaggeredGridItem.defaultProps>, prevState: Readonly<PositionedItem>, snapshot?: any) {
-        this.reportData();
+        if (prevProps.itemHeight !== this.props.itemHeight || prevProps.index !== this.props.index || prevProps.spans != this.props.spans) {
+            this.reportData();
+        }
     }
 
     transform(itemPos: PositionedItem): React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> {
