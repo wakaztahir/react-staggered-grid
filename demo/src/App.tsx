@@ -1,5 +1,11 @@
-import React, {useMemo, useState} from "react"
-import {StaggeredAlignment, StaggeredGrid, StaggeredGridItem, StaggeredItemSpan} from "react-staggered-grid";
+import React, {useEffect, useMemo, useState} from "react"
+import {
+    StaggeredAlignment,
+    StaggeredGrid,
+    StaggeredGridItem,
+    StaggeredGridItemFunctional,
+    StaggeredItemSpan
+} from "react-staggered-grid";
 
 type Item = {
     id: number,
@@ -117,6 +123,7 @@ function StaggeredTestItem(props: StaggeredTestItemProps) {
     let {item, index} = props
     let [span, setSpan] = useState(props.item.span)
     let [height, setHeight] = useState(props.item.height)
+
     return (
         <StaggeredGridItem
             index={index}

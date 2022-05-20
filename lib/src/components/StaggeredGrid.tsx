@@ -27,7 +27,7 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
     requestRepositioningId: number | undefined = undefined
 
     state = {
-        calculatedGridHeight: 0
+        calculatedGridHeight: undefined
     }
 
     gridElementRef: HTMLElement | null = null
@@ -35,43 +35,48 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
     getGridWidth(): number {
         if (this.props.gridWidth != null) {
             return this.props.gridWidth
-        } else if (this.props.columns != null && this.props.columnWidth != null && !this.props.useElementWidth) {
-            return this.props.columns * this.props.columnWidth
-        } else if (this.gridElementRef != null) {
-            const gw = this.gridElementRef.clientWidth
-            if (gw == null || gw == 0) {
-                console.error("gridWidth is zero , gridWidth prop || css width property should be given to StaggeredGrid")
+        } else {
+            let count = this.getDefinedColsCount()
+            if (count != null && this.props.columnWidth != null && !this.props.useElementWidth) {
+                return count * this.props.columnWidth
+            } else if (this.gridElementRef != null) {
+                const gw = this.gridElementRef.clientWidth
+                if (gw == null || gw == 0) {
+                    console.error("gridWidth is zero , gridWidth prop || css width property should be given to StaggeredGrid")
+                    return 0
+                }
+                return gw
+            } else {
                 return 0
             }
-            return gw
-        } else {
-            return 0
+
         }
     }
 
     getColumnWidth(gridWidth: number): number {
         if (this.props.columnWidth != null) {
             return this.props.columnWidth
-        } else if (this.props.columns != null && this.props.columns > 0 && gridWidth > 0) {
-            return gridWidth / this.props.columns
         } else {
-            console.error("columnWidth is zero , columns || columnWidth prop not given to StaggeredGrid")
-            return 260
+            let count = this.getDefinedColsCount()
+            if (count != undefined) {
+                return gridWidth / count
+            } else {
+                console.error("columnWidth is zero , columns || columnWidth prop not given to StaggeredGrid")
+                return 260
+            }
+        }
+    }
+
+    getDefinedColsCount(): number | undefined {
+        if (this.props.columns != null && this.props.columns > 0) {
+            return Math.max(1, Math.min(this.gridItems.length, this.props.columns))
+        } else {
+            return undefined
         }
     }
 
     getColsCount(gridWidth: number): number {
-        if (this.props.columns != null && this.props.columns! > 0) {
-            return this.props.columns!
-        }
-        let count = Math.ceil(gridWidth / this.getColumnWidth(gridWidth)) - 1
-        if (count < 1 || count === Infinity) {
-            return 1
-        }
-        if (this.gridItems.length < count) {
-            return this.gridItems.length
-        }
-        return count
+        return this.getDefinedColsCount() || Math.max(1, Math.min(this.gridItems.length, Math.ceil(gridWidth / this.getColumnWidth(gridWidth)) - 1))
     }
 
     reposition = () => {
@@ -105,8 +110,8 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
             } else if (this.props.alignment === StaggeredAlignment.End) {
                 rowOffset = gridWidth - calculatedGridWidth
             }
-
-            this.gridItems.forEach((item, index) => {
+            for (let i = 0; i < this.gridItems.length; i++) {
+                let item = this.gridItems[i]
                 try {
                     // Getting item span
                     let itemSpan: number = item.itemColumnSpan
@@ -157,7 +162,7 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
                 } catch (e) {
                     console.warn(e)
                 }
-            })
+            }
             if (this.props.calculateHeight) {
                 for (let i = 0; i < colsHeight.length; i++) {
                     if (colsHeight[i] > calculatedGridHeight) {
@@ -240,7 +245,7 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
 
     render() {
         let heightProp: React.CSSProperties
-        if (this.props.calculateHeight) {
+        if (this.props.calculateHeight && this.state.calculatedGridHeight != null) {
             heightProp = {height: this.state.calculatedGridHeight + "px"}
         } else {
             heightProp = {}

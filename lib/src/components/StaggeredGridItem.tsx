@@ -12,7 +12,7 @@ export class StaggeredGridItem extends React.Component<StaggeredGridItemProps & 
         initialWidth: 0,
         initialTranslateX: 0,
         initialTranslateY: 0,
-        spans: StaggeredItemSpan.Single,
+        spans: 1,
         isLoading : false,
     }
 
@@ -50,10 +50,6 @@ export class StaggeredGridItem extends React.Component<StaggeredGridItemProps & 
 
     componentDidUpdate(prevProps: Readonly<StaggeredGridItemProps & typeof StaggeredGridItem.defaultProps>, prevState: Readonly<PositionedItem>, snapshot?: any) {
         this.reportData();
-    }
-
-    componentWillUnmount() {
-        this.context.removeItem(this.props.index)
     }
 
     transform(itemPos: PositionedItem): React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> {

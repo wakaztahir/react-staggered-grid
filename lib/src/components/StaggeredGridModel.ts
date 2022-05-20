@@ -35,7 +35,7 @@ export interface StaggeredGridProps {
 }
 
 export interface StaggeredGridState {
-    calculatedGridHeight: number,
+    calculatedGridHeight: number | undefined,
 }
 
 export interface GridItemData {
@@ -57,7 +57,7 @@ export interface StaggeredGridItemProps {
     style?: React.CSSProperties | undefined,
     className?: string | undefined,
     children?: ReactNode | undefined,
-    isLoading: boolean,
+    isLoading ?: boolean,
 
     transform?(itemPos: PositionedItem): React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>
 }

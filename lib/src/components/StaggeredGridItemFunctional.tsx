@@ -57,6 +57,6 @@ StaggeredGridItemFunctional.defaultProps = {
     initialWidth: 0,
     initialTranslateX: 0,
     initialTranslateY: 0,
-    spans: StaggeredItemSpan.Single,
+    spans: 1,
     isLoading: false,
 }
