@@ -207,7 +207,7 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
     }
 
     componentDidMount() {
-        this.reposition()
+        this.requestReposition()
         if (this.gridElementRef != null && this.props.repositionOnResize) {
             window.addEventListener("resize", this.onResize)
         }
