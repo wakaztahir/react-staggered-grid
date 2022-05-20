@@ -246,7 +246,6 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
         if (this.gridItems[index] != null) {
             if (itemColumnSpan !== this.gridItems[index].itemColumnSpan || height !== this.gridItems[index].itemHeight) {
                 reposition = true
-                console.log("item updated")
             }
             this.gridItems[index].itemColumnSpan = itemColumnSpan
             this.gridItems[index].itemHeight = height
@@ -257,7 +256,6 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
                 itemHeight: height,
                 update
             }
-            console.log("item added")
         }
         if (reposition && this.repositionedOnce) {
             this.requestReposition()
