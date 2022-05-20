@@ -49,7 +49,7 @@ export class StaggeredGridItem extends React.Component<StaggeredGridItemProps & 
     }
 
     componentDidUpdate(prevProps: Readonly<StaggeredGridItemProps & typeof StaggeredGridItem.defaultProps>, prevState: Readonly<PositionedItem>, snapshot?: any) {
-        if (prevProps.itemHeight !== this.props.itemHeight || prevProps.index !== this.props.index || prevProps.spans != this.props.spans) {
+        if (prevProps.itemHeight !== this.props.itemHeight || prevProps.index !== this.props.index || prevProps.spans !== this.props.spans || prevProps.isLoading !== this.props.isLoading || prevProps.children !== this.props.children) {
             this.reportData();
         }
     }
