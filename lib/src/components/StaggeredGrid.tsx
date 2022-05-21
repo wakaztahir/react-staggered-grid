@@ -208,7 +208,7 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
 
     componentDidMount() {
         this.requestReposition()
-        if (this.gridElementRef != null && this.props.repositionOnResize) {
+        if (this.props.repositionOnResize) {
             window.addEventListener("resize", this.onResize)
         }
         if (this.props.requestAppend != null) {
@@ -217,7 +217,7 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
     }
 
     componentWillUnmount() {
-        if (this.gridElementRef != null && this.props.repositionOnResize) {
+        if (this.props.repositionOnResize) {
             window.removeEventListener("resize", this.onResize)
         }
         if (this.props.requestAppend != null) {
@@ -237,6 +237,16 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
             prevProps.children !== this.props.children
         ) {
             this.requestReposition()
+        }
+        if (prevProps.requestAppend == null && this.props.requestAppend != null) {
+            document.addEventListener("scroll", this.onScroll)
+        } else if (prevProps.requestAppend != null && this.props.requestAppend == null) {
+            document.removeEventListener("scroll", this.onScroll)
+        }
+        if (!prevProps.repositionOnResize && this.props.repositionOnResize) {
+            window.addEventListener("resize", this.onResize)
+        } else if (prevProps.repositionOnResize && !this.props.repositionOnResize) {
+            window.removeEventListener("resize", this.onResize)
         }
     }
 

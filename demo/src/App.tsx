@@ -1,11 +1,5 @@
 import React, {useEffect, useMemo, useState} from "react"
-import {
-    StaggeredAlignment,
-    StaggeredGrid,
-    StaggeredGridItem,
-    StaggeredGridItemFunctional,
-    StaggeredItemSpan
-} from "react-staggered-grid";
+import {StaggeredAlignment, StaggeredGrid, StaggeredGridItem, StaggeredItemSpan} from "react-staggered-grid";
 
 type Item = {
     id: number,
@@ -24,6 +18,7 @@ function App() {
     const [images, setImages] = useState(false)
     const [multiSpan, setMultiSpan] = useState(false)
     const [fitHorizontalGap, setFitHorizontalGap] = useState(true)
+    const [infiniteGrid, setInfiniteGrid] = useState(false)
 
     const totalItems = 20
 
@@ -89,6 +84,8 @@ function App() {
                 setImages={setImages}
                 multiSpan={multiSpan}
                 setMultiSpan={setMultiSpan}
+                infiniteGrid={infiniteGrid}
+                setInfiniteGrid={setInfiniteGrid}
             />
             <StaggeredGrid
                 alignment={alignment}
@@ -100,6 +97,9 @@ function App() {
                 verticalGap={verticalGap}
                 fitHorizontalGap={fitHorizontalGap}
                 repositionOnResize={true}
+                requestAppend={infiniteGrid ? () => {
+                    setItemsState(pushItems([...itemsState], 10))
+                } : undefined}
             >
                 {itemsState.map((item, index) => {
                     const itemProps: StaggeredTestItemProps = {
@@ -205,6 +205,8 @@ interface Options {
     setImages: (set: boolean) => void;
     multiSpan: boolean,
     setMultiSpan: (multi: boolean) => void;
+    infiniteGrid: boolean,
+    setInfiniteGrid: (infinity: boolean) => void;
 }
 
 function StaggeredOptions(props: Options) {
@@ -220,7 +222,8 @@ function StaggeredOptions(props: Options) {
                 top: 0,
                 left: 0,
                 zIndex: 99,
-                background: "rgba(255,255,255,.3)"
+                background: "rgba(255,255,255,.3)",
+                flexWrap: "wrap"
             }}>
                 &nbsp;&nbsp;&nbsp;
                 <label htmlFor="fitHorizontalGap">Show Images: </label>
@@ -294,6 +297,11 @@ function StaggeredOptions(props: Options) {
                 &nbsp;&nbsp;
                 <input type={"checkbox"} checked={props.fitHorizontalGap}
                        onChange={(e) => props.setFitHorizontalGap(e.currentTarget.checked)}/>
+                &nbsp;&nbsp;&nbsp;
+                <label htmlFor="infiniteGrid">Infinite Grid : </label>
+                &nbsp;&nbsp;
+                <input type={"checkbox"} checked={props.infiniteGrid}
+                       onChange={(e) => props.setInfiniteGrid(e.currentTarget.checked)}/>
             </div>
         </React.Fragment>
     )
