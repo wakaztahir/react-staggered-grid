@@ -2,12 +2,12 @@ import {PositionedItem, StaggeredGridItemProps} from "./StaggeredGridModel";
 import React, {RefObject, useContext, useEffect, useRef, useState} from "react";
 import {StaggeredGridContext} from "./StaggeredGridContext";
 
-export function useStaggeredItemPosition<T extends HTMLElement>(index: number, spans: number, itemHeight?: number, ref?: RefObject<T>, isLoading: boolean = false, initialWidth: number = 0, initialTranslateX: number = 0, initialTranslateY: number = 0): PositionedItem {
+export function useStaggeredItemPosition<T extends HTMLElement>(index: number, spans: number, itemHeight?: number, ref?: RefObject<T>, isLoading: boolean = false,initialPosition ?: PositionedItem): PositionedItem {
 
-    const [itemPos, setItemPos] = useState<PositionedItem>({
-        width: initialWidth,
-        left: initialTranslateX,
-        top: initialTranslateY
+    const [itemPos, setItemPos] = useState<PositionedItem>(initialPosition || {
+        width: 0,
+        left: 0,
+        top: 0
     })
     const context = useContext(StaggeredGridContext)
 
@@ -30,7 +30,7 @@ export function StaggeredGridItemFunctional(props: StaggeredGridItemProps & type
     if (props.itemHeight == null) {
         elementRef = useRef<HTMLDivElement>(null)
     }
-    const itemPos = useStaggeredItemPosition(props.index, props.spans, props.itemHeight, elementRef, props.isLoading, props.initialWidth, props.initialTranslateX, props.initialTranslateY)
+    const itemPos = useStaggeredItemPosition(props.index, props.spans, props.itemHeight, elementRef, props.isLoading, props.initialPosition)
 
     function transform(itemPos: PositionedItem): React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> {
         if (props.transform != null) {
@@ -55,9 +55,6 @@ export function StaggeredGridItemFunctional(props: StaggeredGridItemProps & type
 }
 
 StaggeredGridItemFunctional.defaultProps = {
-    initialWidth: 0,
-    initialTranslateX: 0,
-    initialTranslateY: 0,
     spans: 1,
     isLoading: false,
 }
