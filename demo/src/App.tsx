@@ -2,6 +2,7 @@ import React, {useEffect, useMemo, useState} from "react"
 import {StaggeredAlignment, StaggeredGrid, StaggeredGridItem, StaggeredItemSpan} from "react-staggered-grid";
 
 type Item = {
+    key: string,
     name: string,
     span: StaggeredItemSpan,
     width: number,
@@ -50,6 +51,7 @@ function App() {
                 span = 1
             }
             items.push({
+                key: "Item" + (i + length) + span,
                 name: "Item " + (i + length),
                 span: span,
                 width: span * columnWidth,
@@ -119,9 +121,9 @@ function App() {
                         }
                     }
                     return (images ? (
-                        <StaggeredImageItem key={item.name + item.span} {...itemProps}/>
+                        <StaggeredImageItem key={item.key} {...itemProps}/>
                     ) : (
-                        <StaggeredTestItem key={item.name + item.span} {...itemProps} />
+                        <StaggeredTestItem key={item.key} {...itemProps} />
                     ))
                 })}
             </StaggeredGrid>
