@@ -9,19 +9,16 @@ export class StaggeredGridItem extends React.Component<StaggeredGridItemProps & 
     context!: React.ContextType<typeof StaggeredGridContext>
 
     static defaultProps = {
-        initialWidth: 0,
-        initialTranslateX: 0,
-        initialTranslateY: 0,
         spans: 1,
         isLoading: false,
     }
 
     //State Variables
 
-    state: PositionedItem = {
-        left: this.props.initialTranslateX,
-        top: this.props.initialTranslateY,
-        width: this.props.initialWidth
+    state: PositionedItem = this.props.initialPosition || {
+        left: 0,
+        top: 0,
+        width: 0
     }
 
     itemElementRef: HTMLElement | null = null

@@ -2,7 +2,7 @@ import React, {ReactNode} from "react";
 
 export enum StaggeredItemSpan {
     Single = 1,
-    Full = -1,
+    Full = 99999,
 }
 
 export enum StaggeredAlignment {
@@ -32,7 +32,7 @@ export interface StaggeredGridProps {
     verticalGap?: number,
     horizontalGap?: number,
     repositionOnResize?: boolean,
-    requestAppendScrollTolerance ?: number,
+    requestAppendScrollTolerance?: number,
     requestAppend?: () => void;
 }
 
@@ -40,20 +40,10 @@ export interface StaggeredGridState {
     calculatedGridHeight: number | undefined,
 }
 
-export interface GridItemData {
-    itemHeight: number,
-    itemColumnSpan: StaggeredItemSpan | number,
-    mounted : boolean,
-    update: (width: number, x: number, y: number) => void
-}
-
-
 //Staggered Grid Item Model
 
 export interface StaggeredGridItemProps {
-    initialWidth?: number,
-    initialTranslateX?: number,
-    initialTranslateY?: number,
+    initialPosition?: PositionedItem,
     itemHeight?: number,
     spans?: StaggeredItemSpan | number,
     index: number,

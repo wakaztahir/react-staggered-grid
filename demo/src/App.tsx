@@ -2,7 +2,7 @@ import React, {useEffect, useMemo, useState} from "react"
 import {StaggeredAlignment, StaggeredGrid, StaggeredGridItem, StaggeredItemSpan} from "react-staggered-grid";
 
 type Item = {
-    id: number,
+    name: string,
     span: StaggeredItemSpan,
     width: number,
     height: number,
@@ -41,6 +41,7 @@ function App() {
     }, [totalItems])
 
     function pushItems(items: Item[], total: number) {
+        const length = items.length
         for (let i = 0; i < total; i++) {
             let span: number
             if (multiSpan) {
@@ -49,7 +50,7 @@ function App() {
                 span = 1
             }
             items.push({
-                id: i,
+                name: "Item " + (i + length),
                 span: span,
                 width: span * columnWidth,
                 height: randomHeights[i],
@@ -105,12 +106,22 @@ function App() {
                     const itemProps: StaggeredTestItemProps = {
                         columnWidth,
                         index,
-                        item
+                        item,
+                        removeMe: (index: number) => {
+                            let newItems = [...itemsState]
+                            newItems.splice(index, 1)
+                            setItemsState(newItems)
+                        },
+                        updateMe: (index, newItem) => {
+                            let newItems = [...itemsState]
+                            newItems[index] = newItem
+                            setItemsState(newItems)
+                        }
                     }
                     return (images ? (
-                        <StaggeredImageItem key={"i" + index + "s" + item.span} {...itemProps}/>
+                        <StaggeredImageItem key={item.name} {...itemProps}/>
                     ) : (
-                        <StaggeredTestItem key={"t" + index + "s" + item.span} {...itemProps} />
+                        <StaggeredTestItem key={item.name} {...itemProps} />
                     ))
                 })}
             </StaggeredGrid>
@@ -122,6 +133,8 @@ interface StaggeredTestItemProps {
     item: Item,
     index: number,
     columnWidth: number,
+    removeMe: (index: number) => void;
+    updateMe: (index: number, item: Item) => void;
 }
 
 function StaggeredTestItem(props: StaggeredTestItemProps) {
@@ -146,6 +159,7 @@ function StaggeredTestItem(props: StaggeredTestItemProps) {
                 alignItems: "center",
                 justifyContent: "center"
             }}>
+                Name : {item.name}
                 <div>Span : <input
                     style={{width: "4em"}}
                     type={"number"}
@@ -164,7 +178,12 @@ function StaggeredTestItem(props: StaggeredTestItemProps) {
                         setHeight(item.height)
                     }}
                 /></div>
-                Name : Item {index}
+                <button onClick={() => props.removeMe(props.index)}>Remove Me</button>
+                <button onClick={() => props.updateMe(props.index, {
+                    ...props.item,
+                    name: props.item.name + "Updated"
+                })}>Update Me
+                </button>
             </div>
         </StaggeredGridItem>
     )
