@@ -119,9 +119,9 @@ function App() {
                         }
                     }
                     return (images ? (
-                        <StaggeredImageItem key={item.name} {...itemProps}/>
+                        <StaggeredImageItem key={item.name + item.span} {...itemProps}/>
                     ) : (
-                        <StaggeredTestItem key={item.name} {...itemProps} />
+                        <StaggeredTestItem key={item.name + item.span} {...itemProps} />
                     ))
                 })}
             </StaggeredGrid>
