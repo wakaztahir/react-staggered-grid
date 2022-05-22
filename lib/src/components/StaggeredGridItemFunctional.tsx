@@ -1,8 +1,8 @@
 import {PositionedItem, StaggeredGridItemProps} from "./StaggeredGridModel";
-import React, {RefObject, useContext, useEffect, useRef, useState} from "react";
+import React, {MutableRefObject, RefObject, useContext, useEffect, useRef, useState} from "react";
 import {StaggeredGridContext} from "./StaggeredGridContext";
 
-export function useStaggeredItemPosition<T extends HTMLElement>(index: number, spans: number, itemHeight?: number, ref?: RefObject<T>, isLoading: boolean = false,initialPosition ?: PositionedItem): PositionedItem {
+export function useStaggeredItemPosition<T extends HTMLElement>(index: number, spans: number, itemHeight?: number, ref?: RefObject<T>, initialPosition ?: PositionedItem): PositionedItem {
 
     const [itemPos, setItemPos] = useState<PositionedItem>(initialPosition || {
         width: 0,
@@ -19,24 +19,34 @@ export function useStaggeredItemPosition<T extends HTMLElement>(index: number, s
         return () => {
             context.removeItem(index)
         }
-    }, [index, spans, ref?.current, isLoading])
+    }, [index, spans, ref?.current])
 
     return itemPos
 }
 
 export function StaggeredGridItemFunctional(props: StaggeredGridItemProps & typeof StaggeredGridItemFunctional.defaultProps) {
 
-    let elementRef: RefObject<HTMLDivElement> | undefined = undefined
+    let elementRef: MutableRefObject<HTMLElement | null> | undefined = undefined
     if (props.itemHeight == null) {
-        elementRef = useRef<HTMLDivElement>(null)
+        elementRef = useRef<HTMLElement | null>(null)
     }
-    const itemPos = useStaggeredItemPosition(props.index, props.spans, props.itemHeight, elementRef, props.isLoading, props.initialPosition)
 
-    function transform(itemPos: PositionedItem): React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> {
+    const itemPos = useStaggeredItemPosition(props.index, props.spans, props.itemHeight, elementRef, props.initialPosition)
+
+    function transform(itemPos: PositionedItem): React.HTMLProps<HTMLElement> {
         if (props.transform != null) {
             return props.transform(itemPos)
         }
+        const newProps: any = {...props}
+        delete newProps.initialPosition
+        delete newProps.itemHeight
+        delete newProps.spans
+        delete newProps.index
+        delete newProps.style
+        delete newProps.children
+        delete newProps.transform
         return {
+            ...newProps,
             style: {
                 position: "absolute",
                 width: itemPos.width + "px",
@@ -48,7 +58,14 @@ export function StaggeredGridItemFunctional(props: StaggeredGridItemProps & type
     }
 
     return (
-        <div {...transform(itemPos)} ref={elementRef} className={props.className}>
+        <div
+            {...transform(itemPos)}
+            ref={(e) => {
+                if (elementRef != null) {
+                    elementRef.current = e
+                }
+            }}
+        >
             {props.children}
         </div>
     )
@@ -56,5 +73,4 @@ export function StaggeredGridItemFunctional(props: StaggeredGridItemProps & type
 
 StaggeredGridItemFunctional.defaultProps = {
     spans: 1,
-    isLoading: false,
 }

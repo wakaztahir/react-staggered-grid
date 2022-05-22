@@ -18,7 +18,7 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
         useElementWidth: false,
         horizontalGap: 0,
         verticalGap: 0,
-        repositionOnResize: false,
+        repositionOnResize: true,
         fitHorizontalGap: false,
         requestAppendScrollTolerance: 20,
     }
@@ -280,6 +280,27 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
         }
     }
 
+    elementProps(): any {
+        const elementProps: any = {...this.props}
+        delete elementProps.columnWidth
+        delete elementProps.columns
+        delete elementProps.alignment
+        delete elementProps.className
+        delete elementProps.children
+        delete elementProps.style
+        delete elementProps.useElementWidth
+        delete elementProps.fitHorizontalGap
+        delete elementProps.gridWidth
+        delete elementProps.limitSpan
+        delete elementProps.calculateHeight
+        delete elementProps.verticalGap
+        delete elementProps.horizontalGap
+        delete elementProps.repositionOnResize
+        delete elementProps.requestAppendScrollTolerance
+        delete elementProps.requestAppend
+        return elementProps
+    }
+
     render() {
         let heightProp: React.CSSProperties
         if (this.props.calculateHeight && this.state.calculatedGridHeight != null) {
@@ -287,6 +308,7 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
         } else {
             heightProp = {}
         }
+
         return (
             <StaggeredGridContext.Provider
                 value={{
@@ -294,6 +316,7 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
                     removeItem: this.removeItem.bind(this),
                 }}>
                 <div
+                    {...this.elementProps()}
                     ref={(element) => {
                         this.gridElementRef = element
                     }}
@@ -302,7 +325,6 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
                         ...heightProp,
                         ...this.props.style
                     }}
-                    className={this.props.className}
                 >
                     {this.props.children}
                 </div>

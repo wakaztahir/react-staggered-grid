@@ -5,16 +5,12 @@ import {PositionedItem, StaggeredGridItemProps} from "./StaggeredGridModel";
 export class StaggeredGridItem extends React.Component<StaggeredGridItemProps & typeof StaggeredGridItem.defaultProps, PositionedItem> {
 
     static contextType = StaggeredGridContext
-
+    static defaultProps = {
+        spans: 1
+    }
     context!: React.ContextType<typeof StaggeredGridContext>
 
-    static defaultProps = {
-        spans: 1,
-        isLoading: false,
-    }
-
     //State Variables
-
     state: PositionedItem = this.props.initialPosition || {
         left: 0,
         top: 0,
@@ -46,7 +42,7 @@ export class StaggeredGridItem extends React.Component<StaggeredGridItemProps & 
     }
 
     componentDidUpdate(prevProps: Readonly<StaggeredGridItemProps & typeof StaggeredGridItem.defaultProps>, prevState: Readonly<PositionedItem>, snapshot?: any) {
-        if (prevProps.itemHeight !== this.props.itemHeight || prevProps.index !== this.props.index || prevProps.spans !== this.props.spans || prevProps.isLoading !== this.props.isLoading || prevProps.children !== this.props.children) {
+        if (prevProps.itemHeight !== this.props.itemHeight || prevProps.index !== this.props.index || prevProps.spans !== this.props.spans || prevProps.children !== this.props.children) {
             this.reportData();
         }
     }
@@ -55,11 +51,20 @@ export class StaggeredGridItem extends React.Component<StaggeredGridItemProps & 
         this.context.removeItem(this.props.index)
     }
 
-    transform(itemPos: PositionedItem): React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> {
+    transform(itemPos: PositionedItem): React.HTMLProps<HTMLElement> {
         if (this.props.transform != null) {
             return this.props.transform(itemPos)
         }
+        const newProps: any = {...this.props}
+        delete newProps.initialPosition
+        delete newProps.itemHeight
+        delete newProps.spans
+        delete newProps.index
+        delete newProps.style
+        delete newProps.children
+        delete newProps.transform
         return {
+            ...newProps,
             style: {
                 position: "absolute",
                 width: itemPos.width + "px",
@@ -77,7 +82,7 @@ export class StaggeredGridItem extends React.Component<StaggeredGridItemProps & 
                 ref={this.props.itemHeight == null ? (element) => {
                     this.itemElementRef = element
                 } : undefined}
-                className={this.props.className}
+                onLoad={this.reportData.bind(this)}
             >
                 {this.props.children}
             </div>

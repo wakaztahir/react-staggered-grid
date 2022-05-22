@@ -1,4 +1,4 @@
-import React, {ReactNode} from "react";
+import React, {ReactNode, RefCallback} from "react";
 
 export enum StaggeredItemSpan {
     Single = 1,
@@ -17,11 +17,16 @@ export interface PositionedItem {
     top: number,
 }
 
-export interface StaggeredGridProps {
+export type StaggeredCustomComponentProps = {
+    ref: RefCallback<HTMLElement> | undefined,
+    style?: React.CSSProperties,
+    children?: React.ReactNode
+}
+
+export interface StaggeredGridProps extends React.HTMLProps<HTMLElement> {
     columnWidth?: number,
     columns?: number;
     alignment?: StaggeredAlignment
-    className?: string | undefined,
     children?: ReactNode | undefined,
     style?: React.CSSProperties | undefined,
     useElementWidth: boolean,
@@ -42,15 +47,12 @@ export interface StaggeredGridState {
 
 //Staggered Grid Item Model
 
-export interface StaggeredGridItemProps {
+export interface StaggeredGridItemProps extends React.HTMLProps<HTMLElement> {
     initialPosition?: PositionedItem,
     itemHeight?: number,
     spans?: StaggeredItemSpan | number,
     index: number,
     style?: React.CSSProperties | undefined,
-    className?: string | undefined,
     children?: ReactNode | undefined,
-    isLoading?: boolean,
-
-    transform?(itemPos: PositionedItem): React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>
+    transform?(itemPos: PositionedItem): React.HTMLProps<HTMLElement>
 }
