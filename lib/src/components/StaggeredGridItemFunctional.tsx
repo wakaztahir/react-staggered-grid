@@ -34,19 +34,23 @@ export function StaggeredGridItemFunctional(props: StaggeredGridItemProps & type
     const itemPos = useStaggeredItemPosition(props.index, props.spans, props.itemHeight, elementRef, props.initialPosition)
 
     function transform(itemPos: PositionedItem): React.HTMLProps<HTMLElement> {
+        const elemProps: any = {...props}
+        delete elemProps.elementType
+        delete elemProps.initialPosition
+        delete elemProps.itemHeight
+        delete elemProps.spans
+        delete elemProps.index
+        delete elemProps.style
+        delete elemProps.children
+        delete elemProps.transform
         if (props.transform != null) {
-            return props.transform(itemPos)
+            return {
+                ...elemProps,
+                ...props.transform(itemPos)
+            }
         }
-        const newProps: any = {...props}
-        delete newProps.initialPosition
-        delete newProps.itemHeight
-        delete newProps.spans
-        delete newProps.index
-        delete newProps.style
-        delete newProps.children
-        delete newProps.transform
         return {
-            ...newProps,
+            ...elemProps,
             style: {
                 position: "absolute",
                 width: itemPos.width + "px",

@@ -6,7 +6,8 @@ export class StaggeredGridItem extends React.Component<StaggeredGridItemProps & 
 
     static contextType = StaggeredGridContext
     static defaultProps = {
-        spans: 1
+        spans: 1,
+        elementType: "div"
     }
     context!: React.ContextType<typeof StaggeredGridContext>
 
@@ -52,19 +53,23 @@ export class StaggeredGridItem extends React.Component<StaggeredGridItemProps & 
     }
 
     transform(itemPos: PositionedItem): React.HTMLProps<HTMLElement> {
+        const elemProps: any = {...this.props}
+        delete elemProps.elementType
+        delete elemProps.initialPosition
+        delete elemProps.itemHeight
+        delete elemProps.spans
+        delete elemProps.index
+        delete elemProps.style
+        delete elemProps.children
+        delete elemProps.transform
         if (this.props.transform != null) {
-            return this.props.transform(itemPos)
+            return {
+                ...elemProps,
+                ...this.props.transform(itemPos)
+            }
         }
-        const newProps: any = {...this.props}
-        delete newProps.initialPosition
-        delete newProps.itemHeight
-        delete newProps.spans
-        delete newProps.index
-        delete newProps.style
-        delete newProps.children
-        delete newProps.transform
         return {
-            ...newProps,
+            ...elemProps,
             style: {
                 position: "absolute",
                 width: itemPos.width + "px",
@@ -76,16 +81,12 @@ export class StaggeredGridItem extends React.Component<StaggeredGridItemProps & 
     }
 
     render() {
-        return (
-            <div
-                {...this.transform(this.state)}
-                ref={this.props.itemHeight == null ? (element) => {
-                    this.itemElementRef = element
-                } : undefined}
-                onLoad={this.reportData.bind(this)}
-            >
-                {this.props.children}
-            </div>
-        )
+        return React.createElement(this.props.elementType, {
+            ...this.transform(this.state),
+            ref: this.props.itemHeight == null ? (element) => {
+                this.itemElementRef = element
+            } : undefined,
+            onLoad: this.reportData.bind(this)
+        }, this.props.children)
     }
 }

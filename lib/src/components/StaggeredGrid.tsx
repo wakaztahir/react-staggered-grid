@@ -12,8 +12,8 @@ interface GridItemData {
 export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps & typeof StaggeredGrid.defaultProps, StaggeredGridState> {
 
     static defaultProps = {
+        elementType: "div",
         alignment: StaggeredAlignment.Center,
-        limitSpan: true,
         calculateHeight: true,
         useElementWidth: false,
         horizontalGap: 0,
@@ -98,7 +98,6 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
             if (columnCount < 1) return;
             const horizontalGap = this.props.horizontalGap
             const verticalGap = this.props.verticalGap
-            const limitSpan = this.props.limitSpan
             const columnWidth = this.getColumnWidth(gridWidth, columnCount, horizontalGap)
             const calculatedGridWidth = (columnCount * columnWidth) + (columnCount - 1) * horizontalGap
             let rowWidth = 0;
@@ -117,10 +116,7 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
                 if (!item.mounted) continue;
                 try {
                     // Getting item span
-                    let itemSpan: number = item.itemColumnSpan
-                    if (limitSpan) {
-                        itemSpan = Math.max(1, Math.min(itemSpan, columnCount))
-                    }
+                    const itemSpan: number = Math.max(1, Math.min(item.itemColumnSpan, columnCount))
 
                     // Getting item width & height
                     const itemWidth = itemSpan * columnWidth + (Math.max(itemSpan - 1, 0) * horizontalGap)
@@ -232,7 +228,6 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
             prevProps.calculateHeight !== this.props.calculateHeight ||
             prevProps.horizontalGap !== this.props.horizontalGap ||
             prevProps.fitHorizontalGap !== this.props.fitHorizontalGap ||
-            prevProps.limitSpan !== this.props.limitSpan ||
             prevProps.alignment !== this.props.alignment ||
             prevProps.children !== this.props.children
         ) {
@@ -282,6 +277,7 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
 
     elementProps(): any {
         const elementProps: any = {...this.props}
+        delete elementProps.elementType
         delete elementProps.columnWidth
         delete elementProps.columns
         delete elementProps.alignment
@@ -291,7 +287,6 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
         delete elementProps.useElementWidth
         delete elementProps.fitHorizontalGap
         delete elementProps.gridWidth
-        delete elementProps.limitSpan
         delete elementProps.calculateHeight
         delete elementProps.verticalGap
         delete elementProps.horizontalGap
@@ -315,19 +310,17 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
                     updateItem: this.updateItem.bind(this),
                     removeItem: this.removeItem.bind(this),
                 }}>
-                <div
-                    {...this.elementProps()}
-                    ref={(element) => {
+                {React.createElement(this.props.elementType, {
+                    ...this.elementProps(),
+                    ref: (element: HTMLElement | null) => {
                         this.gridElementRef = element
-                    }}
-                    style={{
+                    },
+                    style: {
                         position: "relative",
                         ...heightProp,
                         ...this.props.style
-                    }}
-                >
-                    {this.props.children}
-                </div>
+                    }
+                }, this.props.children)}
             </StaggeredGridContext.Provider>
         )
     }
