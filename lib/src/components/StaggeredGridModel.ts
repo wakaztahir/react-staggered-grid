@@ -27,8 +27,6 @@ export interface PositionedItem {
 
 export interface StaggeredGridController {
     isRegistered : boolean,
-    /** Swap item at index with item at withIndex , after swapping you must update items state or call reposition */
-    swap: (index: number, withIndex: number) => void;
     /** This will request reposition on the next animation frame , useful for multiple calls */
     requestReposition: () => void;
     /** Force reposition all the items */

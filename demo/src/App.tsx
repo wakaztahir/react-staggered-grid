@@ -3,8 +3,7 @@ import {
     StaggeredAlignment,
     StaggeredGrid,
     StaggeredGridItem,
-    StaggeredItemSpan,
-    createStaggeredGridController
+    StaggeredItemSpan
 } from "react-staggered-grid";
 import {create} from "domain";
 
@@ -29,8 +28,6 @@ function App() {
     const [infiniteGrid, setInfiniteGrid] = useState(false)
 
     const totalItems = 20
-
-    const controller = createStaggeredGridController();
 
     // calculating heights array for items
     const randomHeights: Array<number> = useMemo(() => {
@@ -112,7 +109,6 @@ function App() {
                 requestAppend={infiniteGrid ? () => {
                     setItemsState(pushItems([...itemsState], 10))
                 } : undefined}
-                gridController={controller}
             >
                 {itemsState.map((item, index) => {
                     const itemProps: StaggeredTestItemProps = {
@@ -132,7 +128,6 @@ function App() {
                         swapWithRandom: (index) => {
                             let random = Math.floor(Math.random() * (itemsState.length - 1));
                             if (random > 0 && random < itemsState.length) {
-                                controller.swap(random, index);
                                 let newItems = [...itemsState]
                                 newItems[index] = newItems[random];
                                 newItems[random] = itemsState[index];

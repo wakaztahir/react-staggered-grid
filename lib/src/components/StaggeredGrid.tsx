@@ -51,9 +51,6 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
     }
 
     registerController(controller: StaggeredGridController) {
-        controller.swap = (index, withIndex) => {
-            this.swapItems(index, withIndex);
-        }
         controller.requestReposition = () => {
             this.requestReposition()
         }
@@ -61,17 +58,6 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
             this.reposition()
         }
         controller.isRegistered = true
-    }
-
-    swapItems(index: number, withIndex: number) {
-        const item = this.gridItems[index];
-        const withItem = this.gridItems[withIndex];
-        if (item != null && withItem != null) {
-            this.gridItems[index] = withItem;
-            this.gridItems[withIndex] = item;
-        } else {
-            console.warn("StaggeredGrid : one of the index given to swap method is out of bounds.")
-        }
     }
 
     getGridWidth(): number {
@@ -382,9 +368,6 @@ export function createStaggeredGridController(): StaggeredGridController {
             console.warn("StaggeredGridController must be registered with a StaggeredGrid before use.")
         },
         requestReposition(): void {
-            console.warn("StaggeredGridController must be registered with a StaggeredGrid before use.")
-        },
-        swap(): void {
             console.warn("StaggeredGridController must be registered with a StaggeredGrid before use.")
         }
     }

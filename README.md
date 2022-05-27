@@ -172,7 +172,7 @@ By default, it uses css properties `left` & `top` to translate each item with `p
 
 ## StaggeredGridController
 
-If you want to swap items or force reposition items on the grid whenever you want !
+If you want to force reposition items on the grid whenever you want !
 You need a StaggeredGridController
 
 ```typescript
@@ -182,8 +182,6 @@ const controller = createStaggeredGridController();
 
 ```typescript
 interface StaggeredGridController {
-    /** Swap item at index with item at withIndex , after swapping you must update items state or call reposition */
-    swap: (index: number, withIndex: number) => void;
     /** This will request reposition on the next animation frame , useful for multiple calls */
     requestReposition: () => void;
     /** Force reposition all the items */
