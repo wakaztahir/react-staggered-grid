@@ -4,8 +4,9 @@ import {
     StaggeredGrid,
     StaggeredGridItem,
     StaggeredItemSpan,
-    useStaggeredGridController
+    createStaggeredGridController
 } from "react-staggered-grid";
+import {create} from "domain";
 
 type Item = {
     key: string,
@@ -29,7 +30,7 @@ function App() {
 
     const totalItems = 20
 
-    const controller = useStaggeredGridController();
+    const controller = createStaggeredGridController();
 
     // calculating heights array for items
     const randomHeights: Array<number> = useMemo(() => {

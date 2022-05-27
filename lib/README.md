@@ -35,7 +35,7 @@ import {
             spans={span}
             style={{transition: "left 0.3s ease,top 0.3s ease"}}
         >
-            <MyItem style={{width: "100%"}} />
+            <MyItem style={{width: "100%"}}/>
         </StaggeredGridItem>
     ))}
 </StaggeredGrid>
@@ -121,7 +121,7 @@ default : 20 , When user reaches the end - requestAppendScrollTolerance , reques
 
 #### gridController : StaggeredGridController (optional)
 
-provide a controller object to call functions on the grid , see `useStaggeredGridController` hook
+provide a controller object to call functions on the grid , see `createStaggeredGridController`
 
 ## StaggeredGridItem
 
@@ -170,17 +170,15 @@ props (attributes) for the staggered grid item element
 
 By default, it uses css properties `left` & `top` to translate each item with `position : absolute` relative to parent
 
-## useStaggeredGridController
+## StaggeredGridController
 
 If you want to swap items or force reposition items on the grid whenever you want !
 You need a StaggeredGridController
 
-If you are using a functional component , You can use
-`useStaggeredGridController` hook to get the controller and provide it to StaggeredGrid Component using `gridController`
-prop
-
-If you are using a class component , you should create a new controller , it's just an `interface` that you can
-implement with stub functions , when registered those stub functions are overridden by the component
+```typescript
+// provide this controller to StaggeredGrid Component using gridController prop
+const controller = createStaggeredGridController();
+```
 
 ```typescript
 interface StaggeredGridController {

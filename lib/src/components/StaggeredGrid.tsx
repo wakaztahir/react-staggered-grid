@@ -1,4 +1,4 @@
-import React, {useMemo} from "react";
+import React from "react";
 import {
     StaggeredAlignment,
     StaggeredGridController,
@@ -60,6 +60,7 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
         controller.reposition = () => {
             this.reposition()
         }
+        controller.isRegistered = true
     }
 
     swapItems(index: number, withIndex: number) {
@@ -282,7 +283,7 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
         } else if (prevProps.repositionOnResize && !this.props.repositionOnResize) {
             window.removeEventListener("resize", this.onResize)
         }
-        if (prevProps.gridController == null && this.props.gridController != null) {
+        if (this.props.gridController != null && !this.props.gridController.isRegistered) {
             this.registerController(this.props.gridController!);
         }
     }
@@ -374,18 +375,17 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
  * StaggeredGrid Component using 'gridController' Prop, the component will register with this controller,
  * then you can use controller to call functions on the grid !
  */
-export function useStaggeredGridController(): StaggeredGridController {
-    return useMemo(() => (
-        {
-            reposition(): void {
-                console.warn("StaggeredGridController must be registered with a StaggeredGrid before use.")
-            },
-            requestReposition(): void {
-                console.warn("StaggeredGridController must be registered with a StaggeredGrid before use.")
-            },
-            swap(): void {
-                console.warn("StaggeredGridController must be registered with a StaggeredGrid before use.")
-            }
+export function createStaggeredGridController(): StaggeredGridController {
+    return {
+        isRegistered: false,
+        reposition(): void {
+            console.warn("StaggeredGridController must be registered with a StaggeredGrid before use.")
+        },
+        requestReposition(): void {
+            console.warn("StaggeredGridController must be registered with a StaggeredGrid before use.")
+        },
+        swap(): void {
+            console.warn("StaggeredGridController must be registered with a StaggeredGrid before use.")
         }
-    ), []);
+    }
 }

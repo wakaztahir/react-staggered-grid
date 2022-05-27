@@ -26,6 +26,7 @@ export interface PositionedItem {
 }
 
 export interface StaggeredGridController {
+    isRegistered : boolean,
     /** Swap item at index with item at withIndex , after swapping you must update items state or call reposition */
     swap: (index: number, withIndex: number) => void;
     /** This will request reposition on the next animation frame , useful for multiple calls */
@@ -47,7 +48,7 @@ export interface StaggeredGridProps extends React.HTMLProps<HTMLElement> {
     children?: ReactNode | undefined,
     /** css properties */
     style?: React.CSSProperties | undefined,
-    /** grid controller used to swap items or reposition forcibly , can be obtained using useStaggeredGridController */
+    /** grid controller used to swap items or reposition forcibly , can be obtained using createStaggeredGridController */
     gridController?: StaggeredGridController | undefined,
     /** when true gridWidth  width of the html element is used even if columns & columnWidth are given */
     useElementWidth: boolean,
