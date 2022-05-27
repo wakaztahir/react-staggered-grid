@@ -2,6 +2,15 @@ import {PositionedItem, StaggeredGridItemProps} from "./StaggeredGridModel";
 import React, {MutableRefObject, RefObject, useContext, useEffect, useRef, useState} from "react";
 import {StaggeredGridContext} from "./StaggeredGridContext";
 
+/**
+ * useStaggeredItemPosition gives back position of the StaggeredGridItem
+ * which can be transformed to css properties for the html element
+ * @param index index of the item in the staggered grid items
+ * @param spans span of the item , column span
+ * @param itemHeight height of the item
+ * @param ref ref object for element
+ * @param initialPosition initial position of the item , by default 0 for everything
+ */
 export function useStaggeredItemPosition<T extends HTMLElement>(index: number, spans: number, itemHeight?: number, ref?: RefObject<T>, initialPosition ?: PositionedItem): PositionedItem {
 
     const [itemPos, setItemPos] = useState<PositionedItem>(initialPosition || {
@@ -24,6 +33,10 @@ export function useStaggeredItemPosition<T extends HTMLElement>(index: number, s
     return itemPos
 }
 
+/**
+ * use StaggeredGridItem as this is still a work in progress
+ * @param props see StaggeredGridItemProps
+ */
 export function StaggeredGridItemFunctional(props: StaggeredGridItemProps & typeof StaggeredGridItemFunctional.defaultProps) {
 
     let elementRef: MutableRefObject<HTMLElement | null> | undefined = undefined

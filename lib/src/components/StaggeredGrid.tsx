@@ -1,6 +1,15 @@
-import React from "react";
-import {StaggeredAlignment, StaggeredGridProps, StaggeredGridState, StaggeredItemSpan,} from "./StaggeredGridModel";
+import React, {useMemo} from "react";
+import {
+    StaggeredAlignment,
+    StaggeredGridController,
+    StaggeredGridProps,
+    StaggeredItemSpan,
+} from "./StaggeredGridModel";
 import {StaggeredGridContext} from "./StaggeredGridContext";
+
+interface StaggeredGridState {
+    calculatedGridHeight: number | undefined,
+}
 
 interface GridItemData {
     itemHeight: number,
@@ -33,6 +42,36 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
     }
 
     gridElementRef: HTMLElement | null = null
+
+    constructor(props: Readonly<StaggeredGridProps & typeof StaggeredGrid.defaultProps> | (StaggeredGridProps & typeof StaggeredGrid.defaultProps)) {
+        super(props);
+        if (this.props.gridController != null) {
+            this.registerController(this.props.gridController);
+        }
+    }
+
+    registerController(controller: StaggeredGridController) {
+        controller.swap = (index, withIndex) => {
+            this.swapItems(index, withIndex);
+        }
+        controller.requestReposition = () => {
+            this.requestReposition()
+        }
+        controller.reposition = () => {
+            this.reposition()
+        }
+    }
+
+    swapItems(index: number, withIndex: number) {
+        const item = this.gridItems[index];
+        const withItem = this.gridItems[withIndex];
+        if (item != null && withItem != null) {
+            this.gridItems[index] = withItem;
+            this.gridItems[withIndex] = item;
+        } else {
+            console.warn("StaggeredGrid : one of the index given to swap method is out of bounds.")
+        }
+    }
 
     getGridWidth(): number {
         if (this.props.gridWidth != null) {
@@ -243,6 +282,9 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
         } else if (prevProps.repositionOnResize && !this.props.repositionOnResize) {
             window.removeEventListener("resize", this.onResize)
         }
+        if (prevProps.gridController == null && this.props.gridController != null) {
+            this.registerController(this.props.gridController!);
+        }
     }
 
     updateItem(index: number, itemColumnSpan: StaggeredItemSpan | number, height: number, update: (width: number, x: number, y: number) => void) {
@@ -283,6 +325,7 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
         delete elementProps.alignment
         delete elementProps.className
         delete elementProps.children
+        delete elementProps.gridController
         delete elementProps.style
         delete elementProps.useElementWidth
         delete elementProps.fitHorizontalGap
@@ -324,4 +367,25 @@ export class StaggeredGrid<ItemType> extends React.Component<StaggeredGridProps 
             </StaggeredGridContext.Provider>
         )
     }
+}
+
+/**
+ * This gives back a controller object , it should be given to the
+ * StaggeredGrid Component using 'gridController' Prop, the component will register with this controller,
+ * then you can use controller to call functions on the grid !
+ */
+export function useStaggeredGridController(): StaggeredGridController {
+    return useMemo(() => (
+        {
+            reposition(): void {
+                console.warn("StaggeredGridController must be registered with a StaggeredGrid before use.")
+            },
+            requestReposition(): void {
+                console.warn("StaggeredGridController must be registered with a StaggeredGrid before use.")
+            },
+            swap(): void {
+                console.warn("StaggeredGridController must be registered with a StaggeredGrid before use.")
+            }
+        }
+    ), []);
 }

@@ -1,5 +1,11 @@
 import React, {useEffect, useMemo, useState} from "react"
-import {StaggeredAlignment, StaggeredGrid, StaggeredGridItem, StaggeredItemSpan} from "react-staggered-grid";
+import {
+    StaggeredAlignment,
+    StaggeredGrid,
+    StaggeredGridItem,
+    StaggeredItemSpan,
+    useStaggeredGridController
+} from "react-staggered-grid";
 
 type Item = {
     key: string,
@@ -22,6 +28,8 @@ function App() {
     const [infiniteGrid, setInfiniteGrid] = useState(false)
 
     const totalItems = 20
+
+    const controller = useStaggeredGridController();
 
     // calculating heights array for items
     const randomHeights: Array<number> = useMemo(() => {
@@ -103,6 +111,7 @@ function App() {
                 requestAppend={infiniteGrid ? () => {
                     setItemsState(pushItems([...itemsState], 10))
                 } : undefined}
+                gridController={controller}
             >
                 {itemsState.map((item, index) => {
                     const itemProps: StaggeredTestItemProps = {
@@ -118,6 +127,16 @@ function App() {
                             let newItems = [...itemsState]
                             newItems[index] = newItem
                             setItemsState(newItems)
+                        },
+                        swapWithRandom: (index) => {
+                            let random = Math.floor(Math.random() * (itemsState.length - 1));
+                            if (random > 0 && random < itemsState.length) {
+                                controller.swap(random, index);
+                                let newItems = [...itemsState]
+                                newItems[index] = newItems[random];
+                                newItems[random] = itemsState[index];
+                                setItemsState(newItems);
+                            }
                         }
                     }
                     return (images ? (
@@ -137,6 +156,7 @@ interface StaggeredTestItemProps {
     columnWidth: number,
     removeMe: (index: number) => void;
     updateMe: (index: number, item: Item) => void;
+    swapWithRandom: (index: number) => void;
 }
 
 function StaggeredTestItem(props: StaggeredTestItemProps) {
@@ -185,6 +205,8 @@ function StaggeredTestItem(props: StaggeredTestItemProps) {
                     ...props.item,
                     name: props.item.name + "Updated"
                 })}>Update Me
+                </button>
+                <button onClick={() => props.swapWithRandom(props.index)}>Swap Me
                 </button>
             </div>
         </StaggeredGridItem>
